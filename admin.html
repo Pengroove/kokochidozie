@@ -187,7 +187,7 @@ td.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
       const tr = el('tr');
       const dt = new Date(b.paid_at || b.created_at);
       tr.append(el('td', null, dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) + ', ' + dt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })));
-      const who = el('td'); who.append(el('div', null, b.name || '')); who.append(el('div', 'more', b.email || '')); tr.append(who);
+      const who = el('td'); who.append(el('div', null, b.name || '')); who.append(el('div', 'more', [b.email, b.phone].filter(Boolean).join('\n'))); tr.append(who);
       const br = el('td'); br.append(el('div', null, b.brand || '–'));
       const extra = [b.website, b.notes].filter(Boolean).join('\n'); if (extra) br.append(el('div', 'more', extra)); tr.append(br);
       tr.append(el('td', null, b.source || 'Direct'));

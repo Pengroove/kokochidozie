@@ -80,9 +80,10 @@ footer a{color:#FFFFFF}
 <form id="f" novalidate>
 <label for="name">Your name</label><input id="name" name="name" autocomplete="name" required>
 <label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required>
-<label for="brand">Brand name</label><input id="brand" name="brand" autocomplete="organization">
-<label for="website">Website or Instagram <span class="opt">(optional)</span></label><input id="website" name="website" inputmode="url">
-<label for="notes">What's going on? <span class="opt">(optional)</span></label><textarea id="notes" name="notes" placeholder="e.g. Ads were working, now cost per sale has doubled"></textarea>
+<label for="phone">Phone number (WhatsApp)</label><input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="e.g. 0803 123 4567" required>
+<label for="brand">Brand name</label><input id="brand" name="brand" autocomplete="organization" required>
+<label for="website">Website or Instagram</label><input id="website" name="website" inputmode="url" required>
+<label for="notes">What's going on?</label><textarea id="notes" name="notes" required placeholder="e.g. Ads were working, now cost per sale has doubled"></textarea>
 <button class="pay" type="submit" id="go">Pay ₦100,000 and book</button>
 <p class="small">Secure payment by Bachs: card or bank transfer.</p>
 </form>
@@ -97,7 +98,10 @@ footer a{color:#FFFFFF}
   f.addEventListener('submit', async function (e) {
     e.preventDefault(); show('');
     const d = Object.fromEntries(new FormData(f));
-    if (!d.name.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email.trim())) { show('Please add your name and a valid email.'); return; }
+    const missing = [['name','your name'],['email','your email'],['phone','your phone number'],['brand','your brand name'],['website','your website or Instagram'],['notes','what\'s going on']].filter(([k]) => !String(d[k] || '').trim());
+    if (missing.length) { show('Please add ' + missing.map((m) => m[1]).join(', ') + '.'); document.getElementById(missing[0][0]).focus(); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email.trim())) { show('Please check your email address.'); document.getElementById('email').focus(); return; }
+    if (String(d.phone).replace(/\D/g, '').length < 10) { show('Please check your phone number.'); document.getElementById('phone').focus(); return; }
     let src = {};
     try { src = JSON.parse(localStorage.getItem('kc_src') || '{}'); } catch (x) {}
     d.source = src.s || 'Direct'; d.campaign = src.c || '';
