@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>You're booked · Koko Chidozie</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23FF8AD0'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-family='Georgia,serif' font-style='italic' font-size='36' fill='%2317183B'%3Ek%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Figtree:wght@400;600;700;800&amp;family=Caveat:wght@700&amp;display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;min-width:0}
+body{margin:0;min-height:100vh;background:#BFE1FF;color:#17183B;font:17px/1.55 Figtree,system-ui,sans-serif;display:grid;place-items:center;padding:24px}
+.card{width:min(560px,100%);background:#FFFFFF;border:2px solid #17183B;border-radius:26px;padding:clamp(26px,5vw,44px);box-shadow:6px 6px 0 #17183B;text-align:center}
+.serif{font-family:'Instrument Serif',Georgia,serif;font-weight:400}
+.it{font-style:italic}
+h1{font-size:clamp(40px,7vw,58px);line-height:1.02;margin:12px 0 10px}
+p{color:#3A3C66;margin:0 0 22px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 26px;border-radius:999px;border:2px solid #17183B;background:#FF8AD0;color:#17183B;font-weight:800;text-decoration:none;box-shadow:4px 4px 0 #17183B}
+.btn:hover{transform:translateY(-2px)}
+.ghost{background:#FFFFFF;box-shadow:none;margin-top:12px}
+.spin{width:44px;height:44px;border-radius:50%;border:4px solid #BFE1FF;border-top-color:#2E45F5;margin:6px auto 0;animation:s 900ms linear infinite}
+@keyframes s{to{transform:rotate(360deg)}}
+.tick{width:64px;height:64px;border-radius:50%;background:#DDF56B;border:2px solid #17183B;display:grid;place-items:center;margin:0 auto;animation:pop 420ms cubic-bezier(.3,1.5,.5,1) both}
+@keyframes pop{from{transform:scale(.4);opacity:0}to{transform:none;opacity:1}}
+.hidden{display:none}
+.small{font-size:14px;margin:18px 0 0}
+@media (prefers-reduced-motion:reduce){*{animation:none !important}}
+</style>
+</head>
+<body>
+<main class="card">
+<div id="checking">
+<div class="spin" aria-hidden="true"></div>
+<h1 class="serif">Confirming your <span class="it">payment</span></h1>
+<p>This usually takes a few seconds.</p>
+</div>
+<div id="paid" class="hidden">
+<div class="tick" aria-hidden="true"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#17183B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></div>
+<h1 class="serif">You're <span class="it">booked</span><span id="who"></span></h1>
+<p>Payment received. Now pick the time that works for you. Bachs will email your receipt.</p>
+<a class="btn" id="cal" href="https://cal.com/kokochidozie/1hourconsultation">Pick your time</a>
+<p class="small">After you pick a time, I'll look through your brand before the call.</p>
+</div>
+<div id="pending" class="hidden">
+<h1 class="serif">Still <span class="it">processing</span></h1>
+<p>Bank transfers can take a few minutes. Keep this page open and it will update, or come back to this link later.</p>
+<button class="btn ghost" type="button" id="again">Check again</button>
+<p class="small">Paid and still seeing this? Email <a href="mailto:hello@pengroove.com">hello@pengroove.com</a> (hello@pengroove.com) with the email you paid with.</p>
+</div>
+</main>
+<script>
+{
+  const ref = new URLSearchParams(location.search).get('ref') || '';
+  const $ = (id) => document.getElementById(id);
+  let tries = 0, timer;
+  function view(name) { ['checking', 'paid', 'pending'].forEach((v) => $(v).classList.toggle('hidden', v !== name)); }
+  async function check() {
+    tries++;
+    try {
+      const r = await fetch('/api/confirm?ref=' + encodeURIComponent(ref), { cache: 'no-store' });
+      const j = await r.json();
+      if (j.status === 'paid') {
+        const first = (j.name || '').split(' ')[0];
+        if (first) $('who').textContent = ', ' + first;
+        const u = new URL('https://cal.com/kokochidozie/1hourconsultation');
+        if (j.name) u.searchParams.set('name', j.name);
+        if (j.email) u.searchParams.set('email', j.email);
+        u.searchParams.set('notes', 'Booking ref ' + ref);
+        $('cal').href = u.toString();
+        view('paid'); return;
+      }
+    } catch (e) {}
+    if (tries < 8) { timer = setTimeout(check, 3000); }
+    else { view('pending'); timer = setTimeout(() => { tries = 0; check(); }, 30000); }
+  }
+  $('again').addEventListener('click', () => { clearTimeout(timer); tries = 0; view('checking'); check(); });
+  if (/^kc_[a-f0-9]{20}$/.test(ref)) check(); else view('pending');
+}
+</script>
+</body>
+</html>
