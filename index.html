@@ -134,7 +134,65 @@ button:focus-visible,a:focus-visible{outline:3px solid #2E45F5;outline-offset:3p
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none !important;transition:none !important}.barfill{width:45%}}
 </style>
-<style>html{scroll-behavior:smooth}</style>
+<style>html{scroll-behavior:smooth}
+/* ---- preview additions ---- */
+.pvbar{position:sticky;top:0;z-index:50;background:#17183B;color:#FFFFFF;font-size:14px;font-weight:600;padding:10px max(4vw,16px);display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;justify-content:space-between}
+.pvbar b{color:#DDF56B}
+.ph{background:#FFF4C2;outline:2px dashed #17183B;outline-offset:2px;border-radius:6px;padding:0 4px}
+.new{display:inline-block;background:#DDF56B;border:2px solid #17183B;border-radius:999px;font:700 12px/1 Figtree,sans-serif;padding:5px 10px;margin-bottom:12px;letter-spacing:.02em}
+/* about */
+.about{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(28px,5vw,72px);align-items:center}
+.portrait{margin:0 auto;max-width:360px;background:#FFFFFF;border:2px solid #17183B;border-radius:24px;padding:18px;box-shadow:6px 6px 0 #17183B;transform:rotate(-2deg);transition:transform 300ms ease}
+.portrait:hover{transform:rotate(0deg)}
+.portrait .img{aspect-ratio:1/1;border-radius:14px;background:#FFFFFF;border:2px dashed #9A9CB8;display:grid;place-items:center;text-align:center;font-weight:700;padding:20px}
+.polaroid{background:#FFFFFF;border:2px solid #17183B;padding:14px 14px 50px;box-shadow:6px 6px 0 #17183B;transform:rotate(-3deg);position:relative;max-width:380px;margin:0 auto;transition:transform 300ms ease}
+.polaroid:hover{transform:rotate(0deg)}
+.polaroid .img{aspect-ratio:4/5;background:repeating-linear-gradient(45deg,#BFE1FF 0 14px,#D6EBFF 14px 28px);display:grid;place-items:center;text-align:center;font-weight:700;color:#17183B;padding:20px}
+.polaroid .cap{position:absolute;left:0;right:0;bottom:12px;text-align:center;font-size:24px;color:#2E45F5}
+.polaroid .tape{position:absolute;top:-14px;left:50%;width:96px;height:26px;margin-left:-48px;background:rgba(255,138,208,.8);transform:rotate(4deg)}
+.about p{font-size:18px;color:#3A3C66;margin:0 0 16px;max-width:560px}
+.bignums{display:grid;gap:16px;max-width:380px;width:100%;margin:0 auto;transform:rotate(-2deg)}
+.bignums .stat b{font-size:clamp(56px,7vw,92px)}
+.bignums .stat{padding:20px 22px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:24px;max-width:600px}
+.stat{background:#FFFFFF;border:2px solid #17183B;border-radius:16px;padding:14px 16px;box-shadow:4px 4px 0 #17183B}
+.stat b{display:block;font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(36px,4vw,52px);line-height:1}
+.stat span{display:block;font-size:14px;font-weight:700;margin-top:4px}
+.about .statnote{font-size:14px;margin:10px 0 0}
+@media (max-width:420px){.bignums{display:grid;gap:16px;max-width:380px;width:100%;margin:0 auto;transform:rotate(-2deg)}
+.bignums .stat b{font-size:clamp(56px,7vw,92px)}
+.bignums .stat{padding:20px 22px}
+.stats{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.stat:last-child{grid-column:1/-1}}
+.facts2{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.facts2 span{background:#FFFFFF;border:2px solid #17183B;border-radius:999px;padding:7px 14px;font-weight:700;font-size:15px;box-shadow:3px 3px 0 #17183B}
+/* work */
+.works{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(280px,360px);gap:22px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 6px 18px}
+.work{scroll-snap-align:start;background:#FFFFFF;border:2px solid #17183B;border-radius:20px;overflow:hidden;box-shadow:5px 5px 0 #17183B;transition:transform 200ms ease,box-shadow 200ms ease}
+.work:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 #17183B}
+.work .shot{aspect-ratio:4/3;display:grid;place-items:center;border-bottom:2px solid #17183B;position:relative}
+.work .shot b{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;font-size:42px}
+.work .shot small{position:absolute;bottom:10px;left:12px;right:12px;font-size:13px;font-weight:600;text-align:center}
+.work .body{padding:16px 18px 20px}
+.work .kind{display:inline-block;font-size:13px;font-weight:700;border:1.5px solid #17183B;border-radius:999px;padding:2px 10px;margin-bottom:8px}
+.work h3{margin:0 0 6px;font-size:22px}
+.work p{margin:0;color:#3A3C66;font-size:16px}
+.scrollnav{display:flex;gap:10px;margin-top:6px}
+.scrollnav button{width:48px;height:48px;border-radius:50%;border:2px solid #17183B;background:#FFFFFF;font-size:20px;cursor:pointer;box-shadow:3px 3px 0 #17183B}
+.scrollnav button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 #17183B}
+/* off the clock */
+.flips{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:18px}
+.flip{display:block;width:100%;perspective:900px;background:none;border:0;padding:0;cursor:pointer;min-height:190px;font:inherit;color:inherit;text-align:left}
+.flip .in{display:block;position:relative;width:100%;height:100%;min-height:190px;transition:transform 600ms cubic-bezier(.3,1.3,.5,1);transform-style:preserve-3d}
+.flip.on .in{transform:rotateY(180deg)}
+.flip .f,.flip .b{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:2px solid #17183B;border-radius:18px;padding:18px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:4px 4px 0 #17183B}
+.flip .b{transform:rotateY(180deg);background:#FFFFFF}
+.flip .q{display:block;font-family:'Instrument Serif',Georgia,serif;font-size:28px;line-height:1.05}
+.flip .hint{display:block;font-size:13px;font-weight:700;opacity:.7}
+.flip .a{display:block;font-family:'Caveat',cursive;font-weight:700;font-size:44px;line-height:1.05}
+.flip:focus-visible{outline:3px solid #2E45F5;outline-offset:4px;border-radius:18px}
+@media (max-width:760px){.about{grid-template-columns:minmax(0,1fr)}}
+@media (prefers-reduced-motion:reduce){.flip .in{transition:none}}
+</style>
 </head>
 <body>
 <div id="top" style="background: #BFE1FF; color: #17183B; font-family: Figtree, system-ui, sans-serif; font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; overflow-x: clip">
@@ -142,6 +200,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #2E45F5;outline-offset:3p
 <div class="wrap" style="display: flex; align-items: center; justify-content: space-between; gap: 16px">
 <a href="#top" class="serif it" style="font-size: 34px; color: #17183B; text-decoration: none; line-height: 1">koko.</a>
 <nav class="navlinks" style="display: flex; gap: 12px">
+<a class="navlink" href="#about">About</a>
 <a class="navlink" href="#building">What I'm building</a>
 <a class="navlink" href="#thinking">How I think</a>
 <a class="navlink" href="#work">Work with me</a>
@@ -193,6 +252,23 @@ I grow ecommerce brands <span class="pill" style="background: #DDF56B; border: 2
 <p class="sr">Mofe, Smileys, House of Coco, CurioClass, Potio Beauty, Do Bowls, Wellborn Hotels, Eccentric Men</p>
 <div class="marquee" aria-hidden="true"><div class="track"><span class="brand serif it">Mofe</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">Smileys</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">House of Coco</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">CurioClass</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">Potio Beauty</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">Do Bowls</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">Wellborn Hotels</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">Eccentric Men</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">Mofe</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">Smileys</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">House of Coco</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">CurioClass</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">Potio Beauty</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">Do Bowls</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">Wellborn Hotels</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">Eccentric Men</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">Mofe</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">Smileys</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">House of Coco</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">CurioClass</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">Potio Beauty</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">Do Bowls</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">Wellborn Hotels</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">Eccentric Men</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">Mofe</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">Smileys</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">House of Coco</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">CurioClass</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">Potio Beauty</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">Do Bowls</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">Wellborn Hotels</span><span class="bdot" aria-hidden="true">•</span><span class="brand serif it">Eccentric Men</span><span class="bdot" aria-hidden="true">•</span></div></div>
 </section>
+<section id="about" class="sec" style="background: #BFE1FF; border-bottom: 2px solid #17183B">
+<div class="wrap about">
+<div class="bignums">
+<div class="stat" style="background:#DDF56B"><b>$1M+</b><span>ad spend managed</span></div>
+<div class="stat" style="background:#FF8AD0"><b>$4M+</b><span>in sales from those ads</span></div>
+<p class="statnote">Over the last 3 years.</p>
+</div>
+<div>
+<h2 class="serif h2">A bit <span class="it">about me</span></h2>
+<p>I'm Koko. Most of my work has been in performance marketing: Meta and TikTok ads first, then email and SEO, mainly for ecommerce, fashion and lifestyle brands.</p>
+<p>I care about the small stuff. Why one ad works and another doesn't, how a page reads on a phone, what makes someone come back for a second order.</p>
+<p>Outside client work, I build things. Pengroove, First Time Renter Guide, and a few tools that started as questions clients kept asking.</p>
+
+</div>
+</div>
+</section>
+
 <section id="building" class="sec" style="background: #FFFFFF">
 <div class="wrap">
 <h2 class="serif h2">What I'm <span class="it">building</span></h2>
@@ -222,6 +298,21 @@ I grow ecommerce brands <span class="pill" style="background: #DDF56B; border: 2
 </div>
 </div>
 </section>
+<section id="selected" class="sec" style="background: #FFFDF6; border-top: 2px solid #17183B">
+<div class="wrap">
+<h2 class="serif h2">Some of the <span class="it">work</span></h2>
+<p class="lede">A few brands I've worked with and what I did for them. Swipe through.</p>
+<div class="works" id="works">
+<article class="work"><div class="shot" style="background:#FF8AD0"><b>Smileys</b></div><div class="body"><span class="kind">Email marketing</span><h3>Smileys</h3><p>I handled their email marketing.</p></div></article>
+<article class="work"><div class="shot" style="background:#DDF56B"><b>Mofe</b></div><div class="body"><span class="kind">Ads</span><h3>Mofe</h3><p>I handled their ads, including the launch of the Nova top.</p></div></article>
+<article class="work"><div class="shot" style="background:#BFE1FF"><b>House of Coco</b></div><div class="body"><span class="kind">Ads</span><h3>House of Coco</h3><p>I handled their ads.</p></div></article>
+<article class="work"><div class="shot" style="background:#FF6A2B"><b>Potio Beauty</b></div><div class="body"><span class="kind">Ads</span><h3>Potio Beauty</h3><p>I handled their ads.</p></div></article>
+<article class="work"><div class="shot" style="background:#FFFFFF"><b>Do Bowls</b></div><div class="body"><span class="kind">Ads</span><h3>Do Bowls</h3><p>I handled their ads.</p></div></article>
+</div>
+<div class="scrollnav"><button type="button" aria-label="Previous" data-dir="-1">←</button><button type="button" aria-label="Next" data-dir="1">→</button></div>
+</div>
+</section>
+
 <section id="thinking" class="sec paper">
 <div class="wrap">
 <span class="hand" style="font-size: 26px; color: #2E45F5; display: block; transform: rotate(-2deg); margin-bottom: 4px">the other side of me</span>
@@ -250,6 +341,15 @@ I grow ecommerce brands <span class="pill" style="background: #DDF56B; border: 2
 </div>
 </div>
 </section>
+<section id="offclock" class="sec" style="background: #FFFFFF; border-top: 2px solid #17183B">
+<div class="wrap">
+<span class="hand" style="font-size: 26px; color: #2E45F5; display: block; transform: rotate(-2deg); margin-bottom: 4px">tap a card</span>
+<h2 class="serif h2">Outside the <span class="it">work</span></h2>
+<p class="lede">A few things about me that have nothing to do with marketing.</p>
+<div class="flips"><button type="button" class="flip" aria-pressed="false"><span class="in"><span class="f" style="background:#DDF56B"><span class="q">Food I'll never say no to</span><span class="hint">Tap to flip</span></span><span class="b"><span class="a">Pasta</span><span class="hint">Tap to flip back</span></span></span></button><button type="button" class="flip" aria-pressed="false"><span class="in"><span class="f" style="background:#FF8AD0"><span class="q">On repeat right now</span><span class="hint">Tap to flip</span></span><span class="b"><span class="a">Rema and Wizkid</span><span class="hint">Tap to flip back</span></span></span></button><button type="button" class="flip" aria-pressed="false"><span class="in"><span class="f" style="background:#BFE1FF"><span class="q">How I switch off</span><span class="hint">Tap to flip</span></span><span class="b"><span class="a">TikTok</span><span class="hint">Tap to flip back</span></span></span></button><button type="button" class="flip" aria-pressed="false"><span class="in"><span class="f" style="background:#FF6A2B"><span class="q">A place I'd move to tomorrow</span><span class="hint">Tap to flip</span></span><span class="b"><span class="a">Greece</span><span class="hint">Tap to flip back</span></span></span></button></div>
+</div>
+</section>
+
 <section id="work" class="sec" style="background: #FFFFFF">
 <div class="wrap">
 <h2 class="serif h2">How a <span class="it">consultation</span> works</h2>
@@ -377,6 +477,13 @@ io.observe($("thinking"));
 setInterval(function () { if (auto && visible) showStop((stop + 1) % 4, true); }, 3800);
 showStop(0, false);
 showPick(0);
+}
+</script>
+<script>
+{
+  document.querySelectorAll('.flip').forEach(function (b) { b.addEventListener('click', function () { var on = b.classList.toggle('on'); b.setAttribute('aria-pressed', on ? 'true' : 'false'); }); });
+  var w = document.getElementById('works');
+  document.querySelectorAll('.scrollnav button').forEach(function (b) { b.addEventListener('click', function () { w.scrollBy({ left: +b.dataset.dir * 380, behavior: 'smooth' }); }); });
 }
 </script>
 <script src="/t.js" defer></script>
