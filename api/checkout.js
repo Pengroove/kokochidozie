@@ -20,11 +20,16 @@ export async function POST(request) {
 
   const id = 'kc_' + randomUUID().replace(/-/g, '').slice(0, 20);
   const source = clean(b.source, 60) || 'Direct';
+  const vid = clean(b.vid, 40);
   try {
     await ensureTables();
     await sql`INSERT INTO kc_bookings (id, name, email, phone, brand, website, notes, source, campaign, amount, currency)
               VALUES (${id}, ${name}, ${email}, ${phone}, ${brand}, ${website}, ${notes},
                       ${source}, ${clean(b.campaign, 80) || null}, ${PRICE}, ${CURRENCY})`;
+    if (vid) {
+      await sql`INSERT INTO kc_events (vid, kind) VALUES (${vid}, 'checkout') ON CONFLICT DO NOTHING`;
+      await sql`UPDATE kc_live SET stage = 'payment', last_seen = now() WHERE vid = ${vid}`;
+    }
     if (!process.env.BACHS_SECRET_KEY) return json({ url: PAYMENT_LINK });
     const bachs = new Bachs({ apiKey: process.env.BACHS_SECRET_KEY });
     const session = await bachs.checkoutSessions.create({

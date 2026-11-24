@@ -68,7 +68,7 @@ p{color:#3A3C66;margin:0 0 22px}
         if (j.email) u.searchParams.set('email', j.email);
         u.searchParams.set('notes', 'Booking ref ' + ref);
         $('cal').href = u.toString();
-        view('paid'); return;
+        view('paid'); if (window.kcStage) window.kcStage('booked'); return;
       }
     } catch (e) {}
     if (tries < 8) { timer = setTimeout(check, 3000); }
@@ -78,5 +78,6 @@ p{color:#3A3C66;margin:0 0 22px}
   if (/^kc_[a-f0-9]{20}$/.test(ref)) check(); else view('pending');
 }
 </script>
+<script src="/t.js" defer></script>
 </body>
 </html>

@@ -7,7 +7,7 @@ export async function GET(request) {
   if (!allowed(request)) return json({ error: 'Wrong password' }, 401);
   const days = Math.min(Math.max(parseInt(new URL(request.url).searchParams.get('days') || '30', 10) || 30, 1), 90);
   await ensureTables();
-  const [visits, bySource, booked, daily, recent] = await Promise.all([
+  const [visits, bySource, booked, daily, recent, funnel, places] = await Promise.all([
     sql`SELECT count(*)::int AS visits, count(DISTINCT vid)::int AS visitors FROM kc_visits WHERE ts > now() - make_interval(days => ${days})`,
     sql`SELECT source, count(*)::int AS visits, count(DISTINCT vid)::int AS visitors
         FROM kc_visits WHERE ts > now() - make_interval(days => ${days}) GROUP BY source ORDER BY visits DESC LIMIT 20`,
@@ -17,7 +17,13 @@ export async function GET(request) {
         FROM kc_visits WHERE ts > now() - make_interval(days => ${days}) GROUP BY 1 ORDER BY 1`,
     sql`SELECT id, created_at, paid_at, name, email, phone, brand, website, notes, source, amount, currency, status,
                stage, call_at, call_done_at, admin_notes, emails
-        FROM kc_bookings ORDER BY created_at DESC LIMIT 100`
+        FROM kc_bookings ORDER BY created_at DESC LIMIT 100`,
+    sql`SELECT kind, count(DISTINCT vid)::int AS n FROM kc_events WHERE ts > now() - make_interval(days => ${days}) GROUP BY kind`,
+    sql`SELECT country, COALESCE(city, '') AS city, count(DISTINCT vid)::int AS visitors
+        FROM kc_visits WHERE ts > now() - make_interval(days => ${days}) AND country IS NOT NULL
+        GROUP BY country, city ORDER BY visitors DESC LIMIT 15`
   ]);
-  return json({ days, totals: visits[0], bySource, booked, daily, bookings: recent, emailsOn: emailsOn() });
+  const f = Object.fromEntries(funnel.map((x) => [x.kind, x.n]));
+  return json({ days, totals: visits[0], bySource, booked, daily, bookings: recent, places,
+    funnel: { consult: f.consult || 0, form: f.form || 0, checkout: f.checkout || 0 }, emailsOn: emailsOn() });
 }
