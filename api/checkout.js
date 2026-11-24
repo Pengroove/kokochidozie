@@ -4,7 +4,7 @@ import { sql, ensureTables, json, clean } from '../lib/db.js';
 
 const PRICE = '100000.00';
 const CURRENCY = 'NGN';
-const SITE = 'https://kokochidozie.com';
+const SITE = 'https://www.kokochidozie.com';
 // Backup: Koko's fixed Bachs payment link, used if the API key is missing or Bachs's API fails.
 const PAYMENT_LINK = 'https://checkout.bachs.io/pay/pl_de48d327e899';
 
