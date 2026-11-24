@@ -181,7 +181,7 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
 
 <div id="tab-bookings" class="hidden">
 <h2 class="serif title">Bookings <span class="it">board</span></h2>
-<p class="lead">Move each booking along with the dropdown. Moving it to "Call done" sends the thank-you email and starts 30 days of support.</p>
+<p class="lead">Move each booking along with the dropdown. Moving it to "Call done" sends the thank-you email and sets the 30-day check-in.</p>
 <p class="warn hidden" id="emailoff">Automatic emails are off until Resend is connected.</p>
 <div class="board" id="board"></div>
 <div class="panel" style="margin-top:18px"><h3 class="serif">Started but <span class="it">didn't pay</span></h3><p class="sub">Filled the form and opened payment, but didn't finish. Worth a gentle follow-up.</p><div id="unpaid"></div></div>
@@ -253,8 +253,8 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
   }
 
   async function update(id, body) { await api('/api/admin-booking', { method: 'POST', body: JSON.stringify({ id, ...body }) }); }
-  const STAGES = [['paid', 'Paid · waiting for a time'], ['scheduled', 'Call booked'], ['audit_done', 'Audit done'], ['support', 'Call done · 30-day support'], ['closed', 'Closed']];
-  const ELABEL = { paid: 'Payment email', scheduled: 'Booking + questions', remind_day: 'Day-before reminder', remind_morning: 'Morning reminder', after_call: 'Thank-you', review: 'Review ask', support_ending: 'Support ending' };
+  const STAGES = [['paid', 'Paid · waiting for a time'], ['scheduled', 'Call booked'], ['audit_done', 'Audit done'], ['support', 'Call done · check-in at 30 days'], ['closed', 'Closed']];
+  const ELABEL = { paid: 'Payment email', scheduled: 'Booking + questions', remind_day: 'Day-before reminder', remind_morning: 'Morning reminder', after_call: 'Thank-you', review: 'Review ask', support_ending: '30-day check-in' };
   function renderBoard(d) {
     $('emailoff').classList.toggle('hidden', !!d.emailsOn);
     const list = d.bookings.filter((b) => b.status === 'paid');
@@ -275,7 +275,7 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
         const sel = el('select'); sel.setAttribute('aria-label', 'Move ' + (b.name || 'booking'));
         STAGES.forEach(([k, l]) => { const o = el('option', null, l); o.value = k; if ((b.stage || 'paid') === k) o.selected = true; sel.append(o); });
         sel.addEventListener('change', async () => {
-          if (sel.value === 'support' && !confirm('Mark the call as done? This sends the thank-you email and starts 30 days of support.')) { sel.value = b.stage || 'paid'; return; }
+          if (sel.value === 'support' && !confirm('Mark the call as done? This sends the thank-you email and sets the 30-day check-in.')) { sel.value = b.stage || 'paid'; return; }
           try { await update(b.id, { stage: sel.value }); loadMain(); } catch (e) { alert(e.message); }
         });
         c.append(sel);
