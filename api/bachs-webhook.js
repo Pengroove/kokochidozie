@@ -1,6 +1,6 @@
 import { webhooks } from '@bachs/sdk';
 import { sql, ensureTables, json } from '../lib/db.js';
-import { confirmBooking } from '../lib/pay.js';
+import { confirmBooking, markPaid } from '../lib/pay.js';
 
 // Bachs calls this when a payment succeeds. The signature is checked before anything happens.
 export async function POST(request) {
@@ -29,9 +29,11 @@ export async function POST(request) {
       else {
         // Paid through the backup payment link: match the newest pending booking with the same email.
         const email = String(d.customer?.email || d.customer_details?.email || d.customer_email || d.email || '').toLowerCase();
-        if (email) await sql`UPDATE kc_bookings SET status = 'paid', paid_at = now()
-          WHERE id = (SELECT id FROM kc_bookings WHERE lower(email) = ${email} AND status = 'pending'
-                      AND created_at > now() - interval '2 days' ORDER BY created_at DESC LIMIT 1)`;
+        if (email) {
+          const m = await sql`SELECT id FROM kc_bookings WHERE lower(email) = ${email} AND status = 'pending'
+                              AND created_at > now() - interval '2 days' ORDER BY created_at DESC LIMIT 1`;
+          if (m[0]) await markPaid(m[0].id);
+        }
       }
     } catch (e) {
       console.error('webhook confirm failed', e?.message);

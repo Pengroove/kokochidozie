@@ -1,14 +1,6 @@
-import { timingSafeEqual, createHash } from 'node:crypto';
 import { sql, ensureTables, json } from '../lib/db.js';
-
-function allowed(request) {
-  const pw = process.env.ADMIN_PASSWORD || '';
-  const given = (request.headers.get('authorization') || '').replace(/^Bearer\s+/i, '');
-  if (!pw || !given) return false;
-  const a = createHash('sha256').update(pw).digest();
-  const b = createHash('sha256').update(given).digest();
-  return timingSafeEqual(a, b);
-}
+import { allowed } from '../lib/auth.js';
+import { emailsOn } from '../lib/email.js';
 
 // Numbers for the admin dashboard: visits and bookings by source over the chosen days.
 export async function GET(request) {
@@ -23,8 +15,9 @@ export async function GET(request) {
         FROM kc_bookings WHERE status = 'paid' AND paid_at > now() - make_interval(days => ${days}) GROUP BY source`,
     sql`SELECT to_char(date_trunc('day', ts), 'YYYY-MM-DD') AS day, count(*)::int AS visits
         FROM kc_visits WHERE ts > now() - make_interval(days => ${days}) GROUP BY 1 ORDER BY 1`,
-    sql`SELECT id, created_at, paid_at, name, email, phone, brand, website, notes, source, amount, currency, status
-        FROM kc_bookings ORDER BY created_at DESC LIMIT 50`
+    sql`SELECT id, created_at, paid_at, name, email, phone, brand, website, notes, source, amount, currency, status,
+               stage, call_at, call_done_at, admin_notes, emails
+        FROM kc_bookings ORDER BY created_at DESC LIMIT 100`
   ]);
-  return json({ days, totals: visits[0], bySource, booked, daily, bookings: recent });
+  return json({ days, totals: visits[0], bySource, booked, daily, bookings: recent, emailsOn: emailsOn() });
 }
