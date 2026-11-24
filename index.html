@@ -32,12 +32,16 @@ a{color:#2E45F5}a:hover{color:#1B2BB8}
 .btn:hover{transform:translateY(-2px)}
 .btn-pink{background:#FF8AD0;color:#17183B;box-shadow:4px 4px 0 #17183B}
 .btn-pink:hover{color:#17183B;box-shadow:6px 6px 0 #17183B}
-.btn-ghost{background:#FFFFFF;color:#17183B}
-.btn-ghost:hover{color:#17183B}
+.btn-ghost{background:#FFFFFF;color:#17183B;box-shadow:4px 4px 0 #17183B}
+.btn-ghost:hover{color:#17183B;box-shadow:6px 6px 0 #17183B}
+.btn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 #17183B}
 .navlink{display:inline-flex;align-items:center;min-height:44px;color:#FFFFFF;background:#2E45F5;text-decoration:none;font-weight:700;padding:0 18px;border-radius:999px;border:2px solid #17183B;font-size:15px;box-shadow:4px 4px 0 #17183B;transition:transform 160ms ease,box-shadow 160ms ease}
 .navlink:hover{color:#FFFFFF;transform:translateY(-2px);box-shadow:6px 6px 0 #17183B}
 .navlink:active{transform:translate(2px,2px);box-shadow:2px 2px 0 #17183B}
 .sticker{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;font-size:14px;font-weight:600;border:1.5px solid #17183B;background:#FFFFFF}
+.open{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 18px;border-radius:999px;background:#17183B;color:#FFFFFF;font-weight:800;font-size:15px;text-decoration:none;border:2px solid #17183B;box-shadow:4px 4px 0 #1FA463;transition:transform 160ms ease,box-shadow 160ms ease}
+.open:hover{color:#FFFFFF;transform:translateY(-2px);box-shadow:6px 6px 0 #1FA463}
+.open .dot{background:#3BE08A}
 .dot{width:9px;height:9px;border-radius:50%;background:#1FA463;animation:pulse 1.8s ease infinite}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(31,164,99,.5)}50%{box-shadow:0 0 0 6px rgba(31,164,99,0)}}
 .pill{display:inline-flex;vertical-align:middle;height:0.82em;width:1.9em;border-radius:999px;overflow:hidden;position:relative;margin:0 0.08em;transform:translateY(-0.06em)}
@@ -114,10 +118,8 @@ a{color:#2E45F5}a:hover{color:#1B2BB8}
 .chip:hover{transform:translateY(-2px)}
 .chip-on{background:#17183B;color:#FFFFFF}
 .answer{animation:noteIn 380ms ease both}
-.foot a{color:#FFFFFF}
-.foot a:hover{color:#DDF56B}
-.foot .btn-pink{box-shadow:4px 4px 0 #DDF56B}
-.foot .btn-pink:hover{box-shadow:6px 6px 0 #DDF56B}
+.foot a{color:#17183B}
+.foot a:hover{color:#2E45F5}
 button:focus-visible,a:focus-visible{outline:3px solid #2E45F5;outline-offset:3px}
 @media (max-width:700px){
 .scene{height:210px}
@@ -149,7 +151,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #2E45F5;outline-offset:3p
 <section style="padding: clamp(28px,5vw,64px) 0 0">
 <div class="wrap" style="text-align: center">
 <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 28px">
-<span class="sticker"><span class="dot"></span>Open to new brands</span>
+<a class="open" href="/consultation"><span class="dot"></span>Taking on new brands now <span aria-hidden="true">→</span></a>
 <span class="sticker" style="background: #DDF56B">Lagos, Nigeria</span>
 </div>
 <h1 class="serif" style="font-size: clamp(46px,8.4vw,112px); line-height: 1.02; margin: 0 auto; max-width: 1080px; text-wrap: balance">
@@ -284,14 +286,14 @@ I grow ecommerce brands <span class="pill" style="background: #DDF56B; border: 2
 </div>
 </div>
 </section>
-<footer class="foot" style="background: #17183B; color: #FFFFFF; padding: clamp(56px,8vw,96px) 0 28px; border-top: 2px solid #17183B">
+<footer class="foot" style="background: #FF8AD0; color: #17183B; padding: clamp(56px,8vw,96px) 0 28px; border-top: 2px solid #17183B">
 <div class="wrap">
 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px">
-<h2 class="serif" style="font-size: clamp(40px,6vw,76px); line-height: 1; margin: 0; max-width: 640px">Got a brand that should be <span class="it" style="color: #DDF56B">selling more?</span></h2>
-<a class="btn btn-pink" href="/consultation" style="color: #17183B">Book a consultation</a>
+<h2 class="serif" style="font-size: clamp(40px,6vw,76px); line-height: 1; margin: 0; max-width: 680px">Let's work out what your brand <span class="it">needs next.</span></h2>
+<a class="btn btn-ghost" href="/consultation">Book a consultation</a>
 </div>
-<div class="serif it" style="font-size: clamp(64px,15vw,230px); line-height: 0.9; margin: clamp(40px,6vw,80px) 0 26px; white-space: nowrap; letter-spacing: -0.03em; color: #FF8AD0">koko chidozie.</div>
-<div style="display: flex; flex-wrap: wrap; gap: 14px 28px; justify-content: space-between; font-size: 15px; border-top: 1.5px solid rgba(255,255,255,.25); padding-top: 20px">
+<div class="serif it" style="font-size: clamp(64px,15vw,230px); line-height: 0.9; margin: clamp(40px,6vw,80px) 0 26px; white-space: nowrap; letter-spacing: -0.03em; color: #17183B">koko chidozie.</div>
+<div style="display: flex; flex-wrap: wrap; gap: 14px 28px; justify-content: space-between; font-size: 15px; border-top: 2px solid #17183B; padding-top: 20px">
 <div style="display: flex; flex-wrap: wrap; gap: 20px">
 <a href="https://x.com/kokochidozie">X · @kokochidozie</a>
 <a href="https://www.instagram.com/pengroovemarketing">Instagram · @pengroovemarketing</a>
