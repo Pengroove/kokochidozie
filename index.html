@@ -34,8 +34,9 @@ a{color:#2E45F5}a:hover{color:#1B2BB8}
 .btn-pink:hover{color:#17183B;box-shadow:6px 6px 0 #17183B}
 .btn-ghost{background:#FFFFFF;color:#17183B}
 .btn-ghost:hover{color:#17183B}
-.navlink{color:#17183B;text-decoration:none;font-weight:600;padding:10px 14px;border-radius:999px;border:1.5px solid #17183B;font-size:14px;transition:background 160ms ease}
-.navlink:hover{background:#DDF56B;color:#17183B}
+.navlink{display:inline-flex;align-items:center;min-height:44px;color:#FFFFFF;background:#2E45F5;text-decoration:none;font-weight:700;padding:0 18px;border-radius:999px;border:2px solid #17183B;font-size:15px;box-shadow:4px 4px 0 #17183B;transition:transform 160ms ease,box-shadow 160ms ease}
+.navlink:hover{color:#FFFFFF;transform:translateY(-2px);box-shadow:6px 6px 0 #17183B}
+.navlink:active{transform:translate(2px,2px);box-shadow:2px 2px 0 #17183B}
 .sticker{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;font-size:14px;font-weight:600;border:1.5px solid #17183B;background:#FFFFFF}
 .dot{width:9px;height:9px;border-radius:50%;background:#1FA463;animation:pulse 1.8s ease infinite}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(31,164,99,.5)}50%{box-shadow:0 0 0 6px rgba(31,164,99,0)}}
@@ -137,7 +138,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #2E45F5;outline-offset:3p
 <header style="padding: 18px 0">
 <div class="wrap" style="display: flex; align-items: center; justify-content: space-between; gap: 16px">
 <a href="#top" class="serif it" style="font-size: 34px; color: #17183B; text-decoration: none; line-height: 1">koko.</a>
-<nav class="navlinks" style="display: flex; gap: 8px">
+<nav class="navlinks" style="display: flex; gap: 12px">
 <a class="navlink" href="#building">What I'm building</a>
 <a class="navlink" href="#thinking">How I think</a>
 <a class="navlink" href="#work">Work with me</a>
