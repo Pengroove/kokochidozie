@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /booked
+Disallow: /api/
+
+Sitemap: https://www.kokochidozie.com/sitemap.xml
