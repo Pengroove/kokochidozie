@@ -183,6 +183,9 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
 <h2 class="serif title">Bookings <span class="it">board</span></h2>
 <p class="lead">Move each booking along with the dropdown. Moving it to "Call done" sends the thank-you email and sets the 30-day check-in.</p>
 <p class="warn hidden" id="emailoff">Automatic emails are off until Resend is connected.</p>
+<div class="panel" style="margin:0 0 18px"><h3 class="serif">Test the <span class="it">emails</span></h3><p class="sub">Sends a sample "payment received" email to the address below.</p>
+<form id="testform" style="display:flex;gap:10px;flex-wrap:wrap"><input id="testto" type="email" required placeholder="you@email.com" style="flex:1;min-width:200px;padding:10px 12px;border:2px solid #17183B;border-radius:10px;font:inherit"><button type="submit" style="padding:10px 18px;border:2px solid #17183B;border-radius:999px;background:#FF8AD0;font:inherit;font-weight:700;cursor:pointer">Send test</button></form>
+<p id="testmsg" class="sub" style="margin-top:8px"></p></div>
 <div class="board" id="board"></div>
 <div class="panel" style="margin-top:18px"><h3 class="serif">Started but <span class="it">didn't pay</span></h3><p class="sub">Filled the form and opened payment, but didn't finish. Worth a gentle follow-up.</p><div id="unpaid"></div></div>
 </div>
@@ -251,6 +254,15 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
     $('d0').textContent = list[0][0];
     $('daysub').textContent = 'Busiest day: ' + dm + ' visits. Hover a bar for the day.';
   }
+
+  $('testform').addEventListener('submit', async (e) => {
+    e.preventDefault(); const m = $('testmsg'); m.textContent = 'Sending…';
+    try {
+      const r = await fetch('/api/admin-test-email', { method: 'POST', headers: { authorization: 'Bearer ' + pw, 'content-type': 'application/json' }, body: JSON.stringify({ to: $('testto').value }) });
+      const d = await r.json().catch(() => ({}));
+      m.textContent = d.ok ? 'Sent. Check the inbox (and spam).' : (d.error || 'Could not send.');
+    } catch (err) { m.textContent = 'Could not send.'; }
+  });
 
   async function update(id, body) { await api('/api/admin-booking', { method: 'POST', body: JSON.stringify({ id, ...body }) }); }
   const STAGES = [['paid', 'Paid · waiting for a time'], ['scheduled', 'Call booked'], ['audit_done', 'Audit done'], ['support', 'Call done · check-in at 30 days'], ['closed', 'Closed']];
