@@ -162,6 +162,10 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
 <div class="panel"><h3 class="serif">Where they <span class="it">are</span></h3><p class="sub">Visitors by city and country.</p><div id="places"></div></div>
 </div>
 <div class="panel" style="margin-top:18px"><h3 class="serif">Visits <span class="it">per day</span></h3><p class="sub" id="daysub"></p><div class="days" id="days"></div><div class="dlab"><span id="d0"></span><span>Today</span></div></div>
+<div class="grid2" style="margin-top:18px">
+<div class="panel"><h3 class="serif">Who's <span class="it">reading</span></h3><p class="sub" id="popsub">From the homepage popup.</p><div id="popans"></div></div>
+<div class="panel"><h3 class="serif">Email <span class="it">list</span></h3><p class="sub" id="emsub">People who left their email in the popup.</p><div id="poplist"></div><p style="margin:12px 0 0"><button id="csv" type="button" style="padding:8px 16px;border:2px solid #17183B;border-radius:999px;background:#DDF56B;font:inherit;font-weight:700;cursor:pointer">Download CSV</button></p></div>
+</div>
 <p class="tip">To see which post or ad brings bookings, tag the link you share, e.g. <code>kokochidozie.com/?utm_source=instagram&amp;utm_campaign=nov-reel</code></p>
 </div>
 
@@ -264,6 +268,29 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
     } catch (err) { m.textContent = 'Could not send.'; }
   });
 
+  const ANS = { brand: 'Runs a brand', marketer: 'Does marketing too', building: 'Building something', nosy: 'Just being nosy' };
+  let popEmails = [];
+  function renderPopup(d) {
+    const p = d.popup || { seen: 0, answered: 0, emails: [], answers: [] };
+    $('popsub').textContent = p.seen + ' saw the popup, ' + p.answered + ' answered (' + pct(p.answered, p.seen) + ').';
+    bars($('popans'), p.answers.map((a) => ({ name: ANS[a.answer] || a.answer, n: a.n })));
+    popEmails = p.emails;
+    $('emsub').textContent = p.emails.length + ' emails in total.';
+    const box = $('poplist'); box.replaceChildren();
+    if (!p.emails.length) box.append(el('p', 'empty', 'No emails yet.'));
+    p.emails.slice(0, 8).forEach((e) => {
+      const r = el('div', 'brow'); r.style.gridTemplateColumns = '1fr auto';
+      r.append(el('div', 'n', e.email)); r.append(el('div', 'nums', ANS[e.answer] || ''));
+      box.append(r);
+    });
+  }
+  $('csv').addEventListener('click', () => {
+    const q = (v) => '"' + String(v ?? '').replace(/"/g, '""') + '"';
+    const rows = [['email', 'who', 'source', 'city', 'country', 'date']].concat(popEmails.map((e) => [e.email, ANS[e.answer] || '', e.source || '', e.city || '', country(e.country), new Date(e.email_at).toISOString().slice(0, 10)]));
+    const blob = new Blob([rows.map((r) => r.map(q).join(',')).join('\n')], { type: 'text/csv' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'kokochidozie-emails.csv'; a.click();
+  });
+
   async function update(id, body) { await api('/api/admin-booking', { method: 'POST', body: JSON.stringify({ id, ...body }) }); }
   const STAGES = [['paid', 'Paid · waiting for a time'], ['scheduled', 'Call booked'], ['audit_done', 'Audit done'], ['support', 'Call done · check-in at 30 days'], ['closed', 'Closed']];
   const ELABEL = { paid: 'Payment email', scheduled: 'Booking + questions', remind_day: 'Day-before reminder', remind_morning: 'Morning reminder', after_call: 'Thank-you', review: 'Review ask', support_ending: '30-day check-in' };
@@ -332,7 +359,7 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
   }
 
   async function loadMain() {
-    try { const d = await api('/api/admin?days=' + days); renderOverview(d); renderBoard(d); }
+    try { const d = await api('/api/admin?days=' + days); renderOverview(d); renderPopup(d); renderBoard(d); }
     catch (e) { if (e.message === 'Wrong password') logout('Wrong password.'); }
   }
   async function loadLive() {
