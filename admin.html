@@ -314,7 +314,7 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'kokochidozie-emails.csv'; a.click();
   });
 
-  const SECTIONS = [['top', 'Top of the page'], ['about', 'A bit about me'], ['building', "What I'm building"], ['work', 'How a consultation works'], ['selected', 'Some of the work'], ['thinking', 'How I think'], ['ai', 'AI and marketing'], ['start', 'Not sure where to start'], ['offclock', 'Outside the work'], ['footer', 'The very bottom']];
+  const SECTIONS = [['top', 'Top of the page'], ['about', 'A bit about me'], ['building', "What I'm building"], ['work', 'How a consultation works'], ['selected', 'Some of the work'], ['thinking', 'How I think'], ['ai', 'AI and marketing'], ['start', 'Not sure where to start'], ['stack', 'Tools I use'], ['offclock', 'Outside the work'], ['footer', 'The very bottom']];
   const SEC_NAME = Object.fromEntries(SECTIONS.concat([['nav', 'Top menu'], ['popup', 'Popup']]));
   const dur = (s) => { s = Math.round(s || 0); return s < 60 ? s + 's' : Math.floor(s / 60) + 'm ' + String(s % 60).padStart(2, '0') + 's'; };
   function renderBehaviour(d) {
