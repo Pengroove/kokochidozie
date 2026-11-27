@@ -191,6 +191,15 @@ button:focus-visible,a:focus-visible{outline:3px solid #2E45F5;outline-offset:3p
 .work .kind{display:inline-block;font-size:13px;font-weight:700;border:1.5px solid #17183B;border-radius:999px;padding:2px 10px;margin-bottom:8px}
 .work h3{margin:0 0 6px;font-size:22px}
 .work p{margin:0;color:#3A3C66;font-size:16px}
+.work .kinds{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.work .kinds .kind{margin-bottom:0}
+.work .kind.kl{background:#DDF56B}
+.work .did{display:block;font-size:12px;font-weight:800;color:#2E45F5;letter-spacing:.02em;margin:0 0 2px}
+.work .mets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:14px}
+.work .met{border:2px solid #17183B;border-radius:12px;padding:10px}
+.work .met b{display:block;font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:28px;line-height:1;white-space:nowrap}
+.work .met span{display:block;font-size:12px;font-weight:700;line-height:1.3;margin-top:4px}
+
 .scrollnav{display:flex;gap:10px;margin-top:6px}
 .scrollnav button{width:48px;height:48px;border-radius:50%;border:2px solid #17183B;background:#FFFFFF;font-size:20px;cursor:pointer;box-shadow:3px 3px 0 #17183B}
 .scrollnav button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 #17183B}
@@ -369,11 +378,11 @@ I grow ecommerce brands <span class="pill" style="background: #DDF56B; border: 2
 <h2 class="serif h2">Some of the <span class="it">work</span></h2>
 <p class="lede">A few brands I've worked with and what I did for them. Swipe through.</p>
 <div class="works" id="works">
-<article class="work"><div class="shot" style="background:#FF8AD0"><b>Smileys</b></div><div class="body"><span class="kind">Email and ads</span><h3>Smileys</h3><p>I handled their email marketing and ads, including the launch of the Deuces in blue and red.</p></div></article>
-<article class="work"><div class="shot" style="background:#DDF56B"><b>Mofe</b></div><div class="body"><span class="kind">Ads</span><h3>Mofe</h3><p>I handled their ads, including the launch of the Nova top.</p></div></article>
-<article class="work"><div class="shot" style="background:#BFE1FF"><b>House of Coco</b></div><div class="body"><span class="kind">Ads</span><h3>House of Coco</h3><p>I handled their ads.</p></div></article>
-<article class="work"><div class="shot" style="background:#FF6A2B"><b>Potio Beauty</b></div><div class="body"><span class="kind">Ads</span><h3>Potio Beauty</h3><p>I handled their ads.</p></div></article>
-<article class="work"><div class="shot" style="background:#FFFFFF"><b>Do Bowls</b></div><div class="body"><span class="kind">Ads</span><h3>Do Bowls</h3><p>I handled their ads.</p></div></article>
+<article class="work"><div class="shot" style="background:#FF8AD0"><b>Smileys</b></div><div class="body"><div class="kinds"><span class="kind">Email</span><span class="kind">Ads</span><span class="kind kl">Launch</span></div><h3>Smileys</h3><span class="did">What I did</span><p>I ran their email marketing and ads, and the launch of the Deuces in blue and red.</p><div class="mets"><div class="met" style="background:#FFD3EC"><b>~3x</b><span>return on ad spend</span></div><div class="met" style="background:#BFE1FF"><b>10–15%</b><span>of website sales from email</span></div></div></div></article>
+<article class="work"><div class="shot" style="background:#DDF56B"><b>Mofe</b></div><div class="body"><div class="kinds"><span class="kind">Ads</span><span class="kind kl">Launch</span></div><h3>Mofe</h3><span class="did">What I did</span><p>I ran their ads, including the launch of the Nova top.</p></div></article>
+<article class="work"><div class="shot" style="background:#BFE1FF"><b>House of Coco</b></div><div class="body"><div class="kinds"><span class="kind">Ads</span></div><h3>House of Coco</h3><span class="did">What I did</span><p>I ran their ads.</p></div></article>
+<article class="work"><div class="shot" style="background:#FF6A2B"><b>Potio Beauty</b></div><div class="body"><div class="kinds"><span class="kind">Ads</span></div><h3>Potio Beauty</h3><span class="did">What I did</span><p>I ran their ads.</p></div></article>
+<article class="work"><div class="shot" style="background:#FFFFFF"><b>Do Bowls</b></div><div class="body"><div class="kinds"><span class="kind">Ads</span></div><h3>Do Bowls</h3><span class="did">What I did</span><p>I ran their ads.</p></div></article>
 </div>
 <div class="scrollnav"><button type="button" aria-label="Previous" data-dir="-1">←</button><button type="button" aria-label="Next" data-dir="1">→</button></div>
 </div>
