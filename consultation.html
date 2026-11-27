@@ -112,6 +112,7 @@ footer a{color:#17183B}
     d.source = src.s || 'Direct'; d.campaign = src.c || ''; d.vid = window.kcVid || '';
     go.disabled = true; go.textContent = 'Opening secure payment…';
     try {
+      try { localStorage.setItem('kc_pop', 'email|' + Date.now()); } catch (e) {}
       const r = await fetch('/api/checkout', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(d) });
       const j = await r.json();
       if (!r.ok || !j.url) throw new Error(j.error || 'Something went wrong. Please try again.');

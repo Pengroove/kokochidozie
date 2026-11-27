@@ -1,6 +1,13 @@
 (function () {
   var KEY = 'kc_pop';
-  try { if (localStorage.getItem(KEY)) return; } catch (e) { return; }
+  var WAIT = 14 * 864e5;
+  // Anyone who has given their email never sees it again. Everyone else can see it again after 14 days.
+  try {
+    var prev = localStorage.getItem(KEY) || '';
+    if (prev.indexOf('email') === 0) return;
+    var t = +prev.split('|')[1];
+    if (t && Date.now() - t < WAIT) return;
+  } catch (e) { return; }
   var css = '.kpb{position:fixed;inset:0;z-index:60;background:rgba(23,24,59,.35);display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;transition:opacity .25s}' +
     '.kpb.on{opacity:1}' +
     '.kp{position:relative;width:340px;max-width:100%;background:#fff;color:#17183B;border:2px solid #17183B;border-radius:18px;box-shadow:6px 6px 0 #17183B;padding:20px;font-family:Figtree,system-ui,sans-serif;transform:scale(.85) translateY(10px);transition:transform .45s cubic-bezier(.2,1.4,.4,1)}' +
@@ -30,7 +37,7 @@
     if (!body.vid) return Promise.resolve({});
     return fetch('/api/popup', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body), keepalive: true }).then(function (r) { return r.json(); }).catch(function () { return {}; });
   }
-  function done(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
+  function done(v) { try { if ((localStorage.getItem(KEY) || '').indexOf('email') !== 0) localStorage.setItem(KEY, v + '|' + Date.now()); } catch (e) {} }
   function step(n) { [].forEach.call(box.querySelectorAll('.st'), function (s) { s.classList.toggle('on', s.getAttribute('data-s') === n); }); }
   function close() { wrap.classList.remove('on'); removeEventListener('keydown', esc); setTimeout(function () { wrap.remove(); }, 300); }
   function esc(e) { if (e.key === 'Escape') { done('closed'); close(); } }
