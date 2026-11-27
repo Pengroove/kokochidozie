@@ -29,4 +29,55 @@
   setTimeout(ping, 800);
   setInterval(ping, 30000);
   document.addEventListener('visibilitychange', ping);
+
+  // How far they read, how long they stay, and what they click.
+  if (location.pathname.indexOf('/admin') === 0) return;
+  var maxPct = 0, deepest = '', secs = 0, order = [];
+  function beacon(body) {
+    body.vid = v; body.path = location.pathname;
+    var s = JSON.stringify(body);
+    try { if (navigator.sendBeacon && navigator.sendBeacon('/api/engage', s)) return; } catch (e) {}
+    fetch('/api/engage', { method: 'POST', body: s, keepalive: true }).catch(function () {});
+  }
+  function measure() {
+    var h = document.documentElement.scrollHeight - innerHeight;
+    var pct = h > 0 ? Math.round(Math.min(1, Math.max(0, scrollY / h)) * 100) : 100;
+    if (pct > maxPct) maxPct = pct;
+  }
+  addEventListener('scroll', measure, { passive: true });
+  function watch() {
+    order = [].slice.call(document.querySelectorAll('section[id], footer'));
+    if (!('IntersectionObserver' in window) || !order.length) return;
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var i = order.indexOf(e.target), cur = deepest ? order.findIndex(function (x) { return (x.id || 'footer') === deepest; }) : -1;
+        if (i > cur) deepest = e.target.id || 'footer';
+      });
+    }, { threshold: 0.25 });
+    order.forEach(function (el) { io.observe(el); });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watch); else watch();
+  setInterval(function () { if (document.visibilityState === 'visible') secs += 5; }, 5000);
+  var lastSent = '';
+  function flush() {
+    measure();
+    var k = maxPct + '|' + deepest + '|' + secs;
+    if (k === lastSent) return;
+    lastSent = k;
+    beacon({ max: maxPct, deepest: deepest, secs: secs });
+  }
+  setInterval(flush, 20000);
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') flush(); });
+  addEventListener('pagehide', flush);
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest && e.target.closest('a, button');
+    if (!t) return;
+    var label = (t.getAttribute('aria-label') || t.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 60);
+    var href = t.getAttribute('href') || '';
+    if (href && /^https?:/.test(href) && t.host !== location.host) label += ' → ' + t.host.replace(/^www\./, '');
+    if (!label) return;
+    var sec = t.closest('.kp') ? 'popup' : (t.closest('section[id]') || {}).id || (t.closest('footer') ? 'footer' : (t.closest('header, nav') ? 'nav' : 'top'));
+    beacon({ click: label, section: sec });
+  }, true);
 })();

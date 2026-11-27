@@ -77,6 +77,7 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
 .empty{color:#3A3C66;font-size:15px;padding:8px 0;margin:0}
 .livehead{display:grid;grid-template-columns:minmax(0,1.2fr) repeat(4,minmax(0,1fr));gap:12px}
 .lt{background:#FFFFFF;border:2px solid #17183B;border-radius:16px;padding:14px 16px;box-shadow:3px 3px 0 #17183B}
+.behhead{grid-template-columns:minmax(0,1.2fr) repeat(4,minmax(0,1fr))}
 .lt.big{background:#17183B;color:#FFFFFF}
 .lt .k{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
 .lt .v{font-size:clamp(30px,3.6vw,48px);line-height:1.05;font-variant-numeric:tabular-nums}
@@ -131,6 +132,7 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
 <div class="brand"><b>koko.</b><span>admin</span></div>
 <div class="tabs" role="tablist">
 <button class="tab" role="tab" data-tab="overview" aria-selected="true">Overview</button>
+<button class="tab" role="tab" data-tab="behaviour" aria-selected="false">Behaviour</button>
 <button class="tab" role="tab" data-tab="live" aria-selected="false"><span class="livedot" aria-hidden="true"></span>Live <span class="count" id="livecount">0</span></button>
 <button class="tab" role="tab" data-tab="bookings" aria-selected="false">Bookings <span class="count" id="bookcount">0</span></button>
 </div>
@@ -162,11 +164,32 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
 <div class="panel"><h3 class="serif">Where they <span class="it">are</span></h3><p class="sub">Visitors by city and country.</p><div id="places"></div></div>
 </div>
 <div class="panel" style="margin-top:18px"><h3 class="serif">Visits <span class="it">per day</span></h3><p class="sub" id="daysub"></p><div class="days" id="days"></div><div class="dlab"><span id="d0"></span><span>Today</span></div></div>
+<p class="tip">To see which post or ad brings bookings, tag the link you share, e.g. <code>kokochidozie.com/?utm_source=instagram&amp;utm_campaign=nov-reel</code></p>
+</div>
+
+<div id="tab-behaviour" class="hidden">
+<h2 class="serif title">How people <span class="it">use it</span></h2>
+<p class="lead" id="behText">Homepage, last 30 days</p>
+<div class="livehead behhead">
+<div class="lt big"><div class="k">Typical time on homepage</div><div class="v" id="b0">–</div></div>
+<div class="lt"><div class="k">Average scroll</div><div class="v" id="b1">–</div></div>
+<div class="lt"><div class="k">Read to the bottom</div><div class="v" id="b2">–</div></div>
+<div class="lt"><div class="k">On mobile</div><div class="v" id="b3">–</div></div>
+<div class="lt"><div class="k">Came back again</div><div class="v" id="b4">–</div></div>
+</div>
+<div class="grid2">
+<div class="panel"><h3 class="serif">How far they <span class="it">read</span></h3><p class="sub">Share of homepage visitors who reached each section. Where it drops sharply is where people leave.</p><div id="reach"></div></div>
+<div class="panel"><h3 class="serif">What they <span class="it">click</span></h3><p class="sub">Buttons and links, by number of people who clicked.</p><div id="clicks"></div></div>
+</div>
+<div class="grid2">
+<div class="panel"><h3 class="serif">Pages</h3><p class="sub">Visitors per page and typical time spent.</p><div id="pages"></div></div>
+<div class="panel"><h3 class="serif">Devices</h3><p class="sub">What people view the site on.</p><div id="devices"></div></div>
+</div>
 <div class="grid2" style="margin-top:18px">
 <div class="panel"><h3 class="serif">Who's <span class="it">reading</span></h3><p class="sub" id="popsub">From the homepage popup.</p><div id="popans"></div></div>
 <div class="panel"><h3 class="serif">Email <span class="it">list</span></h3><p class="sub" id="emsub">People who left their email in the popup.</p><div id="poplist"></div><p style="margin:12px 0 0"><button id="csv" type="button" style="padding:8px 16px;border:2px solid #17183B;border-radius:999px;background:#DDF56B;font:inherit;font-weight:700;cursor:pointer">Download CSV</button></p></div>
 </div>
-<p class="tip">To see which post or ad brings bookings, tag the link you share, e.g. <code>kokochidozie.com/?utm_source=instagram&amp;utm_campaign=nov-reel</code></p>
+<p class="note">Time only counts while the tab is open and in view. "Typical" is the middle value, so one person leaving the tab open all day doesn't skew it.</p>
 </div>
 
 <div id="tab-live" class="hidden">
@@ -191,7 +214,7 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
 <form id="testform" style="display:flex;gap:10px;flex-wrap:wrap"><input id="testto" type="email" required placeholder="you@email.com" style="flex:1;min-width:200px;padding:10px 12px;border:2px solid #17183B;border-radius:10px;font:inherit"><button type="submit" style="padding:10px 18px;border:2px solid #17183B;border-radius:999px;background:#FF8AD0;font:inherit;font-weight:700;cursor:pointer">Send test</button></form>
 <p id="testmsg" class="sub" style="margin-top:8px"></p></div>
 <div class="board" id="board"></div>
-<div class="panel" style="margin-top:18px"><h3 class="serif">Started but <span class="it">didn't pay</span></h3><p class="sub">Filled the form and opened payment, but didn't finish. Worth a gentle follow-up.</p><div id="unpaid"></div></div>
+<div class="panel" style="margin-top:18px"><h3 class="serif">Started but <span class="it">didn't pay</span></h3><p class="sub">Filled the form and opened payment, but no payment has come through. The admin checks Bachs each time it loads, so a real payment moves to the board by itself. If you can see one in Bachs that hasn't, tap Mark as paid.</p><div id="unpaid"></div></div>
 </div>
 </main>
 </section>
@@ -227,7 +250,7 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
     const max = Math.max(1, ...rows.map((r) => r.n));
     rows.forEach((r) => {
       const row = el('div', 'brow');
-      row.append(el('div', 'n', r.name));
+      const nm = el('div', 'n', r.name); nm.title = r.name; row.append(nm);
       const t = el('div', 'track'); const f = el('div', 'fillv' + (alt ? ' alt' : '')); f.style.width = (r.n / max * 100) + '%'; t.append(f); row.append(t);
       const n = el('div', 'nums'); n.append(el('b', null, r.n.toLocaleString())); const x = extra && extra(r); if (x) n.append(x); row.append(n);
       box.append(row);
@@ -291,6 +314,29 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'kokochidozie-emails.csv'; a.click();
   });
 
+  const SECTIONS = [['top', 'Top of the page'], ['about', 'A bit about me'], ['building', "What I'm building"], ['work', 'How a consultation works'], ['selected', 'Some of the work'], ['thinking', 'How I think'], ['ai', 'AI and marketing'], ['start', 'Not sure where to start'], ['offclock', 'Outside the work'], ['footer', 'The very bottom']];
+  const SEC_NAME = Object.fromEntries(SECTIONS.concat([['nav', 'Top menu'], ['popup', 'Popup']]));
+  const dur = (s) => { s = Math.round(s || 0); return s < 60 ? s + 's' : Math.floor(s / 60) + 'm ' + String(s % 60).padStart(2, '0') + 's'; };
+  function renderBehaviour(d) {
+    const e = d.engage; if (!e) return;
+    $('behText').textContent = 'Homepage, last ' + d.days + ' days · ' + e.n + ' visitors measured';
+    $('b0').textContent = e.n ? dur(e.med_secs) : '–';
+    $('b1').textContent = e.n ? Math.round(e.avg_pct) + '%' : '–';
+    
+    const devTotal = e.devices.reduce((a, x) => a + x.n, 0), mob = (e.devices.find((x) => x.device === 'Mobile') || { n: 0 }).n;
+    $('b3').textContent = devTotal ? pct(mob, devTotal) : '–';
+    $('b4').textContent = e.returning.visitors ? pct(e.returning.returning, e.returning.visitors) : '–';
+    const byDeep = Object.fromEntries(e.reach.map((r) => [r.deepest, r.n]));
+    const total = e.reach.reduce((a, r) => a + r.n, 0);
+    $('b2').textContent = total ? pct(byDeep.footer || 0, total) : '–';
+    let left = total;
+    const rows = SECTIONS.map(([k, name]) => { const row = { name, n: left }; left -= byDeep[k] || 0; return row; });
+    bars($('reach'), total ? rows : [], (r) => el('span', 'tag', pct(r.n, total)));
+    bars($('clicks'), e.clicks.map((c) => ({ name: c.label, n: c.people, sec: c.section })), (r) => { const x = el('span', 'tag', SEC_NAME[r.sec] || r.sec || ''); x.style.background = '#FFFFFF'; x.style.fontWeight = '600'; return x; }, true);
+    bars($('pages'), e.pages.map((p) => ({ name: PAGE(p.path), n: p.visitors, t: p.med_secs })), (r) => (r.t ? el('span', 'tag', dur(r.t)) : null));
+    bars($('devices'), e.devices.map((x) => ({ name: x.device, n: x.n })), (r) => el('span', 'tag', pct(r.n, devTotal)), true);
+  }
+
   async function update(id, body) { await api('/api/admin-booking', { method: 'POST', body: JSON.stringify({ id, ...body }) }); }
   const STAGES = [['paid', 'Paid · waiting for a time'], ['scheduled', 'Call booked'], ['audit_done', 'Audit done'], ['support', 'Call done · check-in at 30 days'], ['closed', 'Closed']];
   const ELABEL = { paid: 'Payment email', scheduled: 'Booking + questions', remind_day: 'Day-before reminder', remind_morning: 'Morning reminder', after_call: 'Thank-you', review: 'Review ask', support_ending: '30-day check-in' };
@@ -335,7 +381,15 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
       const r = el('div', 'urow');
       const a = el('div'); a.append(el('div', 'nm', (b.name || '') + (b.brand ? ' · ' + b.brand : ''))); a.append(el('div', 'more', fmt(b.created_at) + (b.source ? ' · via ' + b.source : ''))); r.append(a);
       r.append(el('div', 'uc more', [b.email, b.phone].filter(Boolean).join('\n')));
-      if (b.phone) { const w = el('a', 'wa', 'WhatsApp'); w.href = waLink(b.phone); w.target = '_blank'; w.rel = 'noopener'; r.append(w); } else r.append(el('span'));
+      const act = el('div'); act.style.display = 'flex'; act.style.gap = '8px'; act.style.flexWrap = 'wrap';
+      if (b.phone) { const w = el('a', 'wa', 'WhatsApp'); w.href = waLink(b.phone); w.target = '_blank'; w.rel = 'noopener'; act.append(w); }
+      const mp = el('button', 'wa', 'Mark as paid'); mp.type = 'button'; mp.style.cursor = 'pointer'; mp.style.background = '#DDF56B';
+      mp.onclick = async () => {
+        if (!confirm('Only do this if you can see the payment in Bachs. Mark ' + (b.name || 'this booking') + ' as paid?')) return;
+        mp.disabled = true; mp.textContent = 'Saving…';
+        try { await update(b.id, { markPaid: true }); loadMain(); } catch (err) { mp.disabled = false; mp.textContent = 'Mark as paid'; }
+      };
+      act.append(mp); r.append(act);
       box.append(r);
     });
   }
@@ -359,7 +413,7 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
   }
 
   async function loadMain() {
-    try { const d = await api('/api/admin?days=' + days); renderOverview(d); renderPopup(d); renderBoard(d); }
+    try { const d = await api('/api/admin?days=' + days); renderOverview(d); renderPopup(d); renderBehaviour(d); renderBoard(d); }
     catch (e) { if (e.message === 'Wrong password') logout('Wrong password.'); }
   }
   async function loadLive() {
@@ -369,8 +423,8 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
   function startLive() { clearInterval(liveTimer); loadLive(); liveTimer = setInterval(() => { if (document.visibilityState === 'visible') loadLive(); }, 10000); }
   function show(t) {
     document.querySelectorAll('.tab').forEach((b) => b.setAttribute('aria-selected', b.dataset.tab === t ? 'true' : 'false'));
-    ['overview', 'live', 'bookings'].forEach((k) => $('tab-' + k).classList.toggle('hidden', k !== t));
-    $('range').classList.toggle('hidden', t !== 'overview');
+    ['overview', 'behaviour', 'live', 'bookings'].forEach((k) => $('tab-' + k).classList.toggle('hidden', k !== t));
+    $('range').classList.toggle('hidden', t !== 'overview' && t !== 'behaviour');
     try { history.replaceState(null, '', '#' + t); } catch (e) {}
   }
   function logout(msg) {
@@ -379,7 +433,7 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
   }
   function enter() {
     $('login').classList.add('hidden'); $('dash').classList.remove('hidden');
-    const h = (location.hash || '').slice(1); show(['live', 'bookings'].includes(h) ? h : 'overview');
+    const h = (location.hash || '').slice(1); show(['behaviour', 'live', 'bookings'].includes(h) ? h : 'overview');
     loadMain(); startLive();
   }
 

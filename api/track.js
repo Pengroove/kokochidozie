@@ -10,11 +10,13 @@ export async function POST(request) {
   try {
     await ensureTables();
     const g = geo(request);
-    await sql`INSERT INTO kc_visits (vid, source, campaign, path, country, city)
-              VALUES (${clean(b.vid, 40)}, ${source}, ${clean(b.utm_campaign, 80) || null}, ${clean(b.path, 120)}, ${g.country}, ${g.city})`;
+    const device = /iPad|Tablet/i.test(ua) ? 'Tablet' : /Mobi|Android|iPhone/i.test(ua) ? 'Mobile' : 'Desktop';
+    await sql`INSERT INTO kc_visits (vid, source, campaign, path, country, city, device)
+              VALUES (${clean(b.vid, 40)}, ${source}, ${clean(b.utm_campaign, 80) || null}, ${clean(b.path, 120)}, ${g.country}, ${g.city}, ${device})`;
     if (Math.random() < 0.02) {
       await sql`DELETE FROM kc_visits WHERE ts < now() - interval '90 days'`;
       await sql`DELETE FROM kc_events WHERE ts < now() - interval '90 days'`;
+      await sql`DELETE FROM kc_engage WHERE ts < now() - interval '90 days'`;
       await sql`DELETE FROM kc_live WHERE last_seen < now() - interval '1 day'`;
     }
   } catch (e) {

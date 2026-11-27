@@ -1,6 +1,7 @@
 import { sql, ensureTables, json, clean } from '../lib/db.js';
 import { allowed } from '../lib/auth.js';
 import { sendOnce } from '../lib/email.js';
+import { markPaid } from '../lib/pay.js';
 
 const STAGES = ['paid', 'scheduled', 'audit_done', 'support', 'closed'];
 
@@ -12,6 +13,8 @@ export async function POST(request) {
   const id = String(b.id || '');
   if (!/^kc_[a-f0-9]{20}$/.test(id)) return json({ error: 'Bad id' }, 400);
   await ensureTables();
+  // Manual fallback: you confirmed the money arrived in Bachs yourself.
+  if (b.markPaid === true) await markPaid(id);
   if (typeof b.admin_notes === 'string') await sql`UPDATE kc_bookings SET admin_notes = ${clean(b.admin_notes, 5000)} WHERE id = ${id}`;
   if (b.stage) {
     if (!STAGES.includes(b.stage)) return json({ error: 'Bad stage' }, 400);

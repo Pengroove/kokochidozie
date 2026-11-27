@@ -1,5 +1,6 @@
 import { sql, ensureTables, json } from '../lib/db.js';
 import { sendOnce, emailsOn } from '../lib/email.js';
+import { syncPayments } from '../lib/pay.js';
 
 // Runs every hour (set in vercel.json): sends reminders and follow-ups that are due.
 export async function GET(request) {
@@ -8,6 +9,7 @@ export async function GET(request) {
   await ensureTables();
   // Close a booking once its 30-day check-in email has gone out (or a few days after it was due).
   await sql`UPDATE kc_bookings SET stage = 'closed' WHERE stage = 'support' AND (emails ? 'support_ending' OR call_done_at < now() - interval '35 days')`;
+  try { await syncPayments(); } catch (e) { console.error('payment sync failed', e?.message); }
   if (!emailsOn()) return json({ ok: true, emails: 'off' });
   const due = [
     ['remind_day', sql`SELECT id FROM kc_bookings WHERE stage IN ('scheduled','audit_done') AND call_at BETWEEN now() + interval '3 hours' AND now() + interval '26 hours' AND NOT (emails ? 'remind_day')`],
