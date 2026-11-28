@@ -42,8 +42,10 @@ export async function GET(request) {
     const kind = nextKind('form', l.emails, ageMin(l.t0), abGroup(l.vid));
     if (kind && await sendLeadOnce(l.vid, kind)) add(kind);
   }
-  // Popup sign-ups who haven't had their welcome email yet (also covers anyone who signed up before it existed).
-  const fresh = await sql`SELECT vid FROM kc_popup WHERE email IS NOT NULL AND welcome_at IS NULL AND unsubscribed_at IS NULL LIMIT 20`;
+  // Retry the welcome email for brand-new sign-ups whose first send failed. Older sign-ups are only emailed
+  // when Koko taps Send welcome in the admin.
+  const fresh = await sql`SELECT vid FROM kc_popup WHERE email IS NOT NULL AND welcome_at IS NULL AND unsubscribed_at IS NULL
+    AND email_at > now() - interval '1 hour' LIMIT 20`;
   for (const p of fresh) if (await sendWelcome(p.vid)) add('welcome');
   return json({ ok: true, sent });
 }

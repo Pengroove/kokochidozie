@@ -31,7 +31,7 @@ export async function GET(request) {
         FROM kc_popup WHERE seen_at > now() - make_interval(days => ${days})`,
     sql`SELECT answer, count(*)::int AS n FROM kc_popup
         WHERE answer IS NOT NULL AND seen_at > now() - make_interval(days => ${days}) GROUP BY answer ORDER BY n DESC`,
-    sql`SELECT email, answer, source, country, city, email_at FROM kc_popup WHERE email IS NOT NULL ORDER BY email_at DESC LIMIT 2000`
+    sql`SELECT vid, email, answer, source, country, city, email_at, welcome_at, unsubscribed_at FROM kc_popup WHERE email IS NOT NULL ORDER BY email_at DESC LIMIT 2000`
   ]);
   const W = days;
   const abandonedForms = await sql`SELECT vid, created_at, updated_at, product, name, email, phone, brand, topics, source, emails FROM kc_leads l

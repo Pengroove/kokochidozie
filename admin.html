@@ -77,6 +77,9 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
 .empty{color:#3A3C66;font-size:15px;padding:8px 0;margin:0}
 .livehead{display:grid;grid-template-columns:minmax(0,1.2fr) repeat(4,minmax(0,1fr));gap:12px}
 .lt{background:#FFFFFF;border:2px solid #17183B;border-radius:16px;padding:14px 16px;box-shadow:3px 3px 0 #17183B}
+.subhead{grid-template-columns:repeat(4,minmax(0,1fr))}
+.st{display:inline-block;border:1.5px solid #17183B;border-radius:999px;padding:1px 9px;font-size:12px;font-weight:800;margin-left:6px}
+.st.ok{background:#DDF56B}.st.no{background:#FFFFFF}.st.off{background:#E4E5EE;color:#5A5C80}
 .abtot{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
 .abt.big span{font-size:clamp(20px,6vw,30px);overflow-wrap:anywhere}
 .abt.lime{background:#DDF56B}
@@ -143,6 +146,7 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
 <div class="tabs" role="tablist">
 <button class="tab" role="tab" data-tab="overview" aria-selected="true">Overview</button>
 <button class="tab" role="tab" data-tab="behaviour" aria-selected="false">Behaviour</button>
+<button class="tab" role="tab" data-tab="subscribers" aria-selected="false">Subscribers</button>
 <button class="tab" role="tab" data-tab="live" aria-selected="false"><span class="livedot" aria-hidden="true"></span>Live <span class="count" id="livecount">0</span></button>
 <button class="tab" role="tab" data-tab="bookings" aria-selected="false">Bookings <span class="count" id="bookcount">0</span></button>
 </div>
@@ -200,6 +204,21 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
 <div class="panel"><h3 class="serif">Email <span class="it">list</span></h3><p class="sub" id="emsub">People who left their email in the popup.</p><div id="poplist"></div><p style="margin:12px 0 0"><button id="csv" type="button" style="padding:8px 16px;border:2px solid #17183B;border-radius:999px;background:#DDF56B;font:inherit;font-weight:700;cursor:pointer">Download CSV</button></p></div>
 </div>
 <p class="note">Time only counts while the tab is open and in view. "Typical" is the middle value, so one person leaving the tab open all day doesn't skew it.</p>
+</div>
+
+<div id="tab-subscribers" class="hidden">
+<h2 class="serif title"><span class="it">Subscribers</span></h2>
+<p class="lead">Everyone who left their email in the homepage popup. New sign-ups get their welcome email straight away. Anyone older only gets one when you tap Send welcome.</p>
+<div class="livehead subhead">
+<div class="lt"><div class="k">Subscribers</div><div class="v" id="s0">–</div></div>
+<div class="lt"><div class="k">Welcome sent</div><div class="v" id="s1">–</div></div>
+<div class="lt"><div class="k">Not sent yet</div><div class="v" id="s2">–</div></div>
+<div class="lt"><div class="k">Unsubscribed</div><div class="v" id="s3">–</div></div>
+</div>
+<div class="panel">
+<p style="margin:0 0 6px"><button type="button" id="wAll" class="wa" style="cursor:pointer;background:#FF8AD0">Send welcome to everyone not sent yet</button> <span id="wMsg" class="more"></span></p>
+<div id="sublist"></div>
+</div>
 </div>
 
 <div id="tab-live" class="hidden">
@@ -323,6 +342,39 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
       box.append(r);
     });
   }
+  function renderSubs(d) {
+    const list = (d.popup && d.popup.emails) || [];
+    const sent = list.filter((e) => e.welcome_at && !e.unsubscribed_at).length, off = list.filter((e) => e.unsubscribed_at).length;
+    $('s0').textContent = list.length; $('s1').textContent = sent; $('s2').textContent = list.length - sent - off; $('s3').textContent = off;
+    const box = $('sublist'); box.replaceChildren();
+    if (!list.length) box.append(el('p', 'empty', 'No subscribers yet.'));
+    list.forEach((e) => {
+      const r = el('div', 'urow');
+      const a = el('div'); const nm = el('div', 'nm', e.email);
+      nm.append(e.unsubscribed_at ? el('span', 'st off', 'Unsubscribed') : e.welcome_at ? el('span', 'st ok', 'Welcome sent ' + fmt(e.welcome_at)) : el('span', 'st no', 'Not sent'));
+      a.append(nm);
+      a.append(el('div', 'more', (ANS[e.answer] || 'No answer picked') + ' · signed up ' + fmt(e.email_at) + (e.source ? ' · via ' + e.source : '') + (e.city ? ' · ' + e.city : '')));
+      r.append(a); r.append(el('div'));
+      const act = el('div');
+      if (!e.welcome_at && !e.unsubscribed_at) {
+        const b = el('button', 'wa', 'Send welcome'); b.type = 'button'; b.style.cursor = 'pointer';
+        b.onclick = async () => { b.disabled = true; b.textContent = 'Sending…'; const j = await welcome({ vid: e.vid }); b.textContent = j.sent ? 'Sent ✓' : (j.error || 'Not sent'); setTimeout(loadMain, 1200); };
+        act.append(b);
+      }
+      r.append(act); box.append(r);
+    });
+  }
+  async function welcome(body) {
+    const r = await fetch('/api/admin-welcome', { method: 'POST', headers: { authorization: 'Bearer ' + pw, 'content-type': 'application/json' }, body: JSON.stringify(body) });
+    return r.json().catch(() => ({}));
+  }
+  $('wAll').addEventListener('click', async () => {
+    if (!confirm('Send the welcome email to every subscriber who has not had it yet?')) return;
+    $('wAll').disabled = true; $('wMsg').textContent = 'Sending…';
+    const j = await welcome({ all: true });
+    $('wMsg').textContent = j.ok ? 'Sent ' + j.sent + '.' : (j.error || 'Could not send.');
+    $('wAll').disabled = false; loadMain();
+  });
   $('csv').addEventListener('click', () => {
     const q = (v) => '"' + String(v ?? '').replace(/"/g, '""') + '"';
     const rows = [['email', 'who', 'source', 'city', 'country', 'date']].concat(popEmails.map((e) => [e.email, ANS[e.answer] || '', e.source || '', e.city || '', country(e.country), new Date(e.email_at).toISOString().slice(0, 10)]));
@@ -496,7 +548,7 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
   }
 
   async function loadMain() {
-    try { const d = await api('/api/admin?days=' + days); renderOverview(d); renderPopup(d); renderBehaviour(d); renderBoard(d); renderReviews(d); }
+    try { const d = await api('/api/admin?days=' + days); renderOverview(d); renderPopup(d); renderBehaviour(d); renderBoard(d); renderReviews(d); renderSubs(d); }
     catch (e) { if (e.message === 'Wrong password') logout('Wrong password.'); }
   }
   async function loadLive() {
@@ -506,7 +558,7 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
   function startLive() { clearInterval(liveTimer); loadLive(); liveTimer = setInterval(() => { if (document.visibilityState === 'visible') loadLive(); }, 10000); }
   function show(t) {
     document.querySelectorAll('.tab').forEach((b) => b.setAttribute('aria-selected', b.dataset.tab === t ? 'true' : 'false'));
-    ['overview', 'behaviour', 'live', 'bookings'].forEach((k) => $('tab-' + k).classList.toggle('hidden', k !== t));
+    ['overview', 'behaviour', 'subscribers', 'live', 'bookings'].forEach((k) => $('tab-' + k).classList.toggle('hidden', k !== t));
     $('range').classList.toggle('hidden', t !== 'overview' && t !== 'behaviour');
     try { history.replaceState(null, '', '#' + t); } catch (e) {}
   }
@@ -516,7 +568,7 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
   }
   function enter() {
     $('login').classList.add('hidden'); $('dash').classList.remove('hidden');
-    const h = (location.hash || '').slice(1); show(['behaviour', 'live', 'bookings'].includes(h) ? h : 'overview');
+    const h = (location.hash || '').slice(1); show(['behaviour', 'subscribers', 'live', 'bookings'].includes(h) ? h : 'overview');
     loadMain(); startLive();
   }
 
