@@ -65,7 +65,7 @@ p{color:#3A3C66;margin:0 0 22px}
         const first = (j.name || '').split(' ')[0];
         if (first) $('who').textContent = ', ' + first;
         const chat = j.product === 'chat';
-        const u = new URL(chat ? 'https://cal.com/kokochidozie/15min' : 'https://cal.com/kokochidozie/1hourconsultation');
+        const u = new URL(chat ? 'https://cal.com/kokochidozie/30min' : 'https://cal.com/kokochidozie/1hourconsultation');
         if (chat) $('aftertxt').textContent = 'After you pick a time, you will get a calendar invite with the call link.';
         if (j.name) u.searchParams.set('name', j.name);
         if (j.email) u.searchParams.set('email', j.email);
