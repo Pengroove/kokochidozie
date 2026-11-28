@@ -9,8 +9,8 @@ export async function GET(request) {
     await ensureTables();
     const status = await confirmBooking(id);
     if (!status) return json({ status: 'unknown' }, 404);
-    const r = await sql`SELECT name, email FROM kc_bookings WHERE id = ${id}`;
-    return json({ status, name: r[0]?.name || '', email: r[0]?.email || '' });
+    const r = await sql`SELECT name, email, product FROM kc_bookings WHERE id = ${id}`;
+    return json({ status, name: r[0]?.name || '', email: r[0]?.email || '', product: r[0]?.product || 'consult' });
   } catch (e) {
     console.error('confirm failed', e?.message);
     return json({ status: 'pending' });

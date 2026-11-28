@@ -351,7 +351,7 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
       items.forEach((b) => {
         const c = el('div', 'card');
         c.append(el('div', 'nm', b.name || ''));
-        c.append(el('div', 'br', [b.brand, b.source ? 'via ' + b.source : ''].filter(Boolean).join(' · ')));
+        c.append(el('div', 'br', [b.product === 'chat' ? '15-min chat' : '1-hour consultation', b.brand, b.source ? 'via ' + b.source : ''].filter(Boolean).join(' · ')));
         if (b.call_at) c.append(el('div', 'when', 'Call: ' + fmt(b.call_at)));
         const ct = el('div', 'contact'); ct.append(el('div', null, b.email || ''));
         if (b.phone) { const a = el('a', null, b.phone + ' (WhatsApp)'); a.href = waLink(b.phone); a.target = '_blank'; a.rel = 'noopener'; ct.append(a); }
@@ -379,7 +379,7 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
     if (!unpaid.length) box.append(el('p', 'empty', 'Nobody so far.'));
     unpaid.forEach((b) => {
       const r = el('div', 'urow');
-      const a = el('div'); a.append(el('div', 'nm', (b.name || '') + (b.brand ? ' · ' + b.brand : ''))); a.append(el('div', 'more', fmt(b.created_at) + (b.source ? ' · via ' + b.source : ''))); r.append(a);
+      const a = el('div'); a.append(el('div', 'nm', (b.name || '') + (b.brand ? ' · ' + b.brand : '') + (b.product === 'chat' ? ' · 15-min chat' : ''))); a.append(el('div', 'more', fmt(b.created_at) + (b.source ? ' · via ' + b.source : ''))); r.append(a);
       r.append(el('div', 'uc more', [b.email, b.phone].filter(Boolean).join('\n')));
       const act = el('div'); act.style.display = 'flex'; act.style.gap = '8px'; act.style.flexWrap = 'wrap';
       if (b.phone) { const w = el('a', 'wa', 'WhatsApp'); w.href = waLink(b.phone); w.target = '_blank'; w.rel = 'noopener'; act.append(w); }

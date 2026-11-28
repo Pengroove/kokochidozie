@@ -19,7 +19,7 @@ export async function GET(request) {
         FROM kc_bookings WHERE status = 'paid' AND paid_at > now() - make_interval(days => ${days}) GROUP BY source`,
     sql`SELECT to_char(date_trunc('day', ts), 'YYYY-MM-DD') AS day, count(*)::int AS visits
         FROM kc_visits WHERE ts > now() - make_interval(days => ${days}) GROUP BY 1 ORDER BY 1`,
-    sql`SELECT id, created_at, paid_at, name, email, phone, brand, website, notes, source, amount, currency, status,
+    sql`SELECT id, created_at, paid_at, name, email, phone, brand, website, notes, source, amount, currency, status, product,
                stage, call_at, call_done_at, admin_notes, emails
         FROM kc_bookings ORDER BY created_at DESC LIMIT 100`,
     sql`SELECT kind, count(DISTINCT vid)::int AS n FROM kc_events WHERE ts > now() - make_interval(days => ${days}) GROUP BY kind`,
