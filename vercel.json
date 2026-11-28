@@ -1,4 +1,8 @@
 {
   "cleanUrls": true,
+  "rewrites": [
+    { "source": "/consultation", "destination": "/book" },
+    { "source": "/chat", "destination": "/book" }
+  ],
   "crons": [{ "path": "/api/cron", "schedule": "0 * * * *" }]
 }
