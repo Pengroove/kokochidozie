@@ -56,6 +56,42 @@ input:focus,textarea:focus{outline:3px solid #2E45F5;outline-offset:1px}
 footer{background:#FF8AD0;color:#17183B;border-top:2px solid #17183B;padding:28px 0;border-top:2px solid #17183B;font-size:15px}
 footer a{color:#17183B}
 @media (max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}.card{position:static}}
+.grid{padding-top:clamp(8px,2vw,24px)}
+@media (min-width:861px){h1{font-size:clamp(44px,5vw,64px)}.card{padding:22px 26px;top:14px}.card h2{font-size:32px}.card h2{margin-bottom:10px}.card .sub{display:none}input,textarea{padding:9px 12px;margin-bottom:10px}label{font-size:14px;margin-bottom:4px}textarea{min-height:50px}.topic{font-size:13px;padding:5px 11px}.topics{gap:6px}.pay{min-height:50px}header{padding:12px 0}}
+.grid{grid-template-areas:"hero card" "how card";grid-template-rows:auto 1fr;row-gap:28px}
+.hero{grid-area:hero}.how{grid-area:how}.card{grid-area:card}
+.hero h1{margin-bottom:12px}.hero .lede{margin-bottom:18px}.hero .facts{margin-bottom:0}
+.how h2{font-size:clamp(28px,3vw,36px);margin:0 0 14px;line-height:1.05}
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));column-gap:12px}
+input,textarea{margin-bottom:12px;padding:11px 13px}
+.topics{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 12px}
+.topic{font:inherit;font-size:14px;font-weight:700;color:#17183B;background:#FFFFFF;border:2px solid #17183B;border-radius:999px;padding:7px 13px;cursor:pointer;transition:background .15s,transform .15s}
+.topic:hover{transform:translateY(-1px)}
+.topic[aria-pressed="true"]{background:#DDF56B}
+.hint{font-size:13px;color:#5A5C80;margin:-4px 0 6px}
+.sticky{display:none}
+@media (max-width:860px){
+.grid{grid-template-areas:"hero" "card" "how";grid-template-rows:auto;padding-top:8px}
+h1{font-size:clamp(34px,9.5vw,44px);margin-bottom:8px}
+.hero .note{display:none}
+.hero .lede{font-size:16px;margin-bottom:12px}
+.fact{padding:6px 13px;font-size:14px}
+.card{padding:18px}
+.card h2{font-size:28px;margin-bottom:12px}
+.card .sub{display:none}
+.pair{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
+input{padding:10px 12px;margin-bottom:10px}
+label{font-size:14px;margin-bottom:4px}
+.topic{font-size:13px;padding:6px 11px}
+.hero .note{font-size:22px;margin-bottom:2px}
+.lede{font-size:17px}
+.sticky{display:flex;position:fixed;left:12px;right:12px;bottom:12px;z-index:20;align-items:center;justify-content:space-between;gap:12px;background:#FFFFFF;border:2px solid #17183B;border-radius:999px;padding:8px 8px 8px 18px;box-shadow:4px 4px 0 #17183B;transition:transform .25s,opacity .25s}
+.sticky.off{transform:translateY(140%);opacity:0;pointer-events:none}
+.sticky b{font-size:16px}
+.sticky a{background:#FF8AD0;border:2px solid #17183B;border-radius:999px;padding:9px 18px;font-weight:800;color:#17183B;text-decoration:none}
+footer{padding-bottom:90px}
+}
+
 </style>
 </head>
 <body>
@@ -64,11 +100,28 @@ footer a{color:#17183B}
 <a class="back" href="/">← Back to the site</a>
 </div></header>
 <main class="wrap grid">
-<section>
+<section class="hero">
 <span class="hand note">just a quick chat</span>
 <h1 class="serif">A 15&#8209;minute <span class="it">chat</span></h1>
-<p class="lede">For business owners who just want to talk something through. No prep and no audit, just a conversation about your business.</p>
+<p class="lede">A quick call to talk through your business. No prep, no audit.</p>
 <div class="facts"><span class="fact price">₦30,000</span><span class="fact">15 minutes</span></div>
+</section>
+<aside class="card" id="book">
+<h2 class="serif">Book your call</h2>
+<p class="sub">Takes a minute. You'll pick your time right after paying.</p>
+<p class="err" id="err" role="alert"></p>
+<form id="f" novalidate>
+<div class="pair"><div><label for="name">Your name</label><input id="name" name="name" autocomplete="name" required></div><div><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required></div></div>
+<div class="pair"><div><label for="phone">WhatsApp number</label><input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="0803 123 4567" required></div><div><label for="brand">Business name</label><input id="brand" name="brand" autocomplete="organization" required></div></div>
+<label for="website">Website or Instagram <span class="opt">(optional)</span></label><input id="website" name="website" inputmode="url">
+<label id="topicslabel">What should we focus on?</label><p class="hint">Tap all that apply.</p><div class="topics" role="group" aria-labelledby="topicslabel"><button type="button" class="topic" aria-pressed="false">Running ads</button><button type="button" class="topic" aria-pressed="false">Email marketing</button><button type="button" class="topic" aria-pressed="false">SEO</button><button type="button" class="topic" aria-pressed="false">Pricing</button><button type="button" class="topic" aria-pressed="false">Starting something new</button><button type="button" class="topic" aria-pressed="false">Growing my business</button><button type="button" class="topic" aria-pressed="false">Something else</button></div>
+<label for="notes">Anything else? <span class="opt">(optional)</span></label><input id="notes" name="notes" maxlength="300" placeholder="e.g. I sell skincare and want to start ads">
+<button class="pay" type="submit" id="go">Pay ₦30,000 and book</button>
+<p class="small">Secure payment by Bachs: card or bank transfer. You pick your time right after.</p>
+</form>
+</aside>
+<section class="how">
+<h2 class="serif">How it <span class="it">works</span></h2>
 <ol class="steps">
 <li class="step"><span class="dot" style="background:#FF8AD0">1</span><div><h3>Pay, then pick your day and time</h3><p>Right after paying, you choose a time that suits you.</p></div></li>
 <li class="step"><span class="dot" style="background:#DDF56B">2</span><div><h3>Tell me what's on your mind</h3><p>A line or two is enough, so I know what you want to talk about.</p></div></li>
@@ -76,22 +129,8 @@ footer a{color:#17183B}
 </ol>
 <p style="margin:22px 0 0;font-size:16px;color:#3A3C66">Want me to go through your ads, site and numbers properly? <a href="/consultation">The 1-hour consultation</a> is built for that.</p>
 </section>
-<aside class="card" id="book">
-<h2 class="serif">Book your call</h2>
-<p class="sub">You'll pick your day and time right after paying.</p>
-<p class="err" id="err" role="alert"></p>
-<form id="f" novalidate>
-<label for="name">Your name</label><input id="name" name="name" autocomplete="name" required>
-<label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required>
-<label for="phone">Phone number (WhatsApp)</label><input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="e.g. 0803 123 4567" required>
-<label for="brand">Business name</label><input id="brand" name="brand" autocomplete="organization" required>
-<label for="website">Website or Instagram <span class="opt">(optional)</span></label><input id="website" name="website" inputmode="url">
-<label for="notes">What do you want to talk about?</label><textarea id="notes" name="notes" required placeholder="e.g. I'm thinking of running ads for the first time"></textarea>
-<button class="pay" type="submit" id="go">Pay ₦30,000 and book</button>
-<p class="small">Secure payment by Bachs: card or bank transfer.</p>
-</form>
-</aside>
 </main>
+<div class="sticky" id="sticky"><b>₦30,000 · 15 min</b><a href="#book">Book now</a></div>
 <footer><div class="wrap top"><span>© 2026 Koko Chidozie</span><a href="/">kokochidozie.com</a></div></footer>
 <script>window.KC_STAGE = 'consultation';</script>
 <script src="/t.js" defer></script>
@@ -99,11 +138,23 @@ footer a{color:#17183B}
 {
   const f = document.getElementById('f'), err = document.getElementById('err'), go = document.getElementById('go');
   function show(msg) { err.textContent = msg; err.style.display = msg ? 'block' : 'none'; }
+  document.querySelectorAll('.topic').forEach((b) => b.addEventListener('click', () => { b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') === 'true' ? 'false' : 'true'); show(''); if (window.kcStage) window.kcStage('filling'); }));
+  const bar = document.getElementById('sticky');
+  // "Book now" takes them to the next thing they need to fill in, or pays if everything is done.
+  bar.querySelector('a').addEventListener('click', (e) => {
+    e.preventDefault();
+    const empty = [...f.querySelectorAll('input[required]')].find((i) => !i.value.trim());
+    if (empty) { empty.scrollIntoView({ block: 'center', behavior: 'smooth' }); empty.focus({ preventScroll: true }); }
+    else f.requestSubmit();
+  });
+  if ('IntersectionObserver' in window) new IntersectionObserver((es) => es.forEach((e) => bar.classList.toggle('off', e.isIntersecting)), { threshold: 0.05 }).observe(document.getElementById('go'));
   f.addEventListener('input', function () { if (window.kcStage) window.kcStage('filling'); }, { once: true });
   f.addEventListener('submit', async function (e) {
     e.preventDefault(); show('');
     const d = Object.fromEntries(new FormData(f));
-    const missing = [['name','your name'],['email','your email'],['phone','your phone number'],['brand','your business name'],['notes','what you want to talk about']].filter(([k]) => !String(d[k] || '').trim());
+    const picked = [...document.querySelectorAll('.topic[aria-pressed="true"]')].map((b) => b.textContent);
+    if (picked.length) d.notes = 'Topics: ' + picked.join(', ') + (String(d.notes || '').trim() ? '\n\n' + d.notes.trim() : '');
+    const missing = [['name','your name'],['email','your email'],['phone','your phone number'],['brand','your business name'],['notes','at least one topic']].filter(([k]) => !String(d[k] || '').trim());
     if (missing.length) { show('Please add ' + missing.map((m) => m[1]).join(', ') + '.'); document.getElementById(missing[0][0]).focus(); return; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email.trim())) { show('Please check your email address.'); document.getElementById('email').focus(); return; }
     if (String(d.phone).replace(/\D/g, '').length < 10) { show('Please check your phone number.'); document.getElementById('phone').focus(); return; }

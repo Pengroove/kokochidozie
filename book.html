@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Book a call · Koko Chidozie</title>
+<meta name="description" content="Book a call with Koko: a quick 15-minute chat, or a 1-hour growth consultation where I review your ads, site and numbers first.">
+<meta property="og:title" content="Book a call · Koko Chidozie">
+<meta property="og:description" content="A quick 15-minute chat, or a full 1-hour growth consultation.">
+<meta property="og:url" content="https://www.kokochidozie.com/consultation">
+<link rel="canonical" href="https://www.kokochidozie.com/consultation">
+<meta property="og:image" content="https://kokochidozie.com/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#BFE1FF">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23FF8AD0'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-family='Georgia,serif' font-style='italic' font-size='36' fill='%2317183B'%3Ek%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Figtree:wght@400;500;600;700;800&amp;family=Caveat:wght@700&amp;display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:#BFE1FF;color:#17183B;font:17px/1.55 Figtree,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#2E45F5}
+.wrap{max-width:1100px;margin:0 auto;padding:0 max(4vw,16px)}
+.serif{font-family:'Instrument Serif',Georgia,serif;font-weight:400}
+.it{font-style:italic}
+.hand{font-family:Caveat,cursive;font-weight:700}
+header{padding:18px 0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px}
+.logo{font-size:34px;color:#17183B;text-decoration:none;line-height:1}
+.back{color:#17183B;font-weight:600;text-decoration:none;padding:10px 14px;border:1.5px solid #17183B;border-radius:999px;font-size:14px;background:#FFFFFF}
+.grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:start;padding-top:clamp(20px,4vw,48px);padding-bottom:80px}
+h1{font-size:clamp(44px,6.4vw,82px);line-height:1.02;margin:0 0 18px;text-wrap:balance}
+.lede{font-size:19px;color:#3A3C66;margin:0 0 26px;max-width:520px}
+.facts{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:34px}
+.fact{padding:9px 16px;border:2px solid #17183B;border-radius:999px;font-weight:700;background:#FFFFFF}
+.fact.price{background:#DDF56B}
+.steps{display:grid;gap:14px;margin:0;padding:0;list-style:none}
+.step{display:flex;gap:16px;align-items:flex-start;background:#FFFFFF;border:2px solid #17183B;border-radius:18px;padding:16px 18px}
+.dot{flex:none;width:40px;height:40px;border-radius:50%;border:2px solid #17183B;display:grid;place-items:center;font-weight:800}
+.step h3{margin:0 0 4px;font-size:18px;line-height:1.3}
+.step p{margin:0;color:#3A3C66;font-size:16px}
+.card{background:#FFFFFF;border:2px solid #17183B;border-radius:24px;padding:clamp(22px,3vw,34px);box-shadow:6px 6px 0 #17183B;position:sticky;top:20px}
+.card h2{font-size:clamp(32px,3.4vw,42px);line-height:1.05;margin:0 0 4px}
+.card .sub{margin:0 0 20px;color:#3A3C66;font-size:16px}
+label{display:block;font-weight:700;font-size:15px;margin:0 0 6px}
+.opt{font-weight:500;color:#5A5C80}
+input,textarea{width:100%;font:inherit;font-size:16px;color:#17183B;border:2px solid #17183B;border-radius:12px;padding:12px 14px;background:#FFFFFF;margin-bottom:14px}
+textarea{min-height:96px;resize:vertical}
+input:focus,textarea:focus{outline:3px solid #2E45F5;outline-offset:1px}
+.pay{width:100%;min-height:54px;border:2px solid #17183B;border-radius:999px;background:#FF8AD0;color:#17183B;font:inherit;font-weight:800;font-size:17px;cursor:pointer;box-shadow:4px 4px 0 #17183B;transition:transform 160ms ease,box-shadow 160ms ease}
+.pay:hover{transform:translateY(-2px);box-shadow:6px 6px 0 #17183B}
+.pay:disabled{opacity:.7;cursor:wait;transform:none}
+.small{font-size:14px;color:#5A5C80;margin:12px 0 0;text-align:center}
+.err{background:#FFE1E1;border:2px solid #B3261E;color:#7A1A14;border-radius:12px;padding:10px 14px;margin:0 0 14px;font-size:15px;display:none}
+.note{font-size:26px;color:#2E45F5;transform:rotate(-2deg);display:inline-block;margin-bottom:6px}
+footer{background:#FF8AD0;color:#17183B;border-top:2px solid #17183B;padding:28px 0;border-top:2px solid #17183B;font-size:15px}
+footer a{color:#17183B}
+@media (max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}.card{position:static}}
+.grid{padding-top:clamp(8px,2vw,24px)}
+@media (min-width:861px){h1{font-size:clamp(44px,5vw,64px)}.card{padding:22px 26px;top:14px}.card h2{font-size:32px}.card h2{margin-bottom:10px}.card .sub{display:none}input,textarea{padding:9px 12px;margin-bottom:10px}label{font-size:14px;margin-bottom:4px}textarea{min-height:50px}.topic{font-size:13px;padding:5px 11px}.topics{gap:6px}.pay{min-height:50px}header{padding:12px 0}}
+.grid{grid-template-areas:"hero card" "how card";grid-template-rows:auto 1fr;row-gap:28px}
+.hero{grid-area:hero}.how{grid-area:how}.card{grid-area:card}
+.hero h1{margin-bottom:12px}.hero .lede{margin-bottom:18px}.hero .facts{margin-bottom:0}
+.how h2{font-size:clamp(28px,3vw,36px);margin:0 0 14px;line-height:1.05}
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));column-gap:12px}
+input,textarea{margin-bottom:12px;padding:11px 13px}
+.topics{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 12px}
+.topic{font:inherit;font-size:14px;font-weight:700;color:#17183B;background:#FFFFFF;border:2px solid #17183B;border-radius:999px;padding:7px 13px;cursor:pointer;transition:background .15s,transform .15s}
+.topic:hover{transform:translateY(-1px)}
+.topic[aria-pressed="true"]{background:#DDF56B}
+.hint{font-size:13px;color:#5A5C80;margin:-4px 0 6px}
+.sticky{display:none}
+@media (max-width:860px){
+.grid{grid-template-areas:"hero" "card" "how";grid-template-rows:auto;padding-top:8px}
+h1{font-size:clamp(34px,9.5vw,44px);margin-bottom:8px}
+.hero .note{display:none}
+.hero .lede{font-size:16px;margin-bottom:12px}
+.fact{padding:6px 13px;font-size:14px}
+.card{padding:18px}
+.card h2{font-size:28px;margin-bottom:12px}
+.card .sub{display:none}
+.pair{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
+input{padding:10px 12px;margin-bottom:10px}
+label{font-size:14px;margin-bottom:4px}
+.topic{font-size:13px;padding:6px 11px}
+.hero .note{font-size:22px;margin-bottom:2px}
+.lede{font-size:17px}
+.sticky{display:flex;position:fixed;left:12px;right:12px;bottom:12px;z-index:20;align-items:center;justify-content:space-between;gap:12px;background:#FFFFFF;border:2px solid #17183B;border-radius:999px;padding:8px 8px 8px 18px;box-shadow:4px 4px 0 #17183B;transition:transform .25s,opacity .25s}
+.sticky.off{transform:translateY(140%);opacity:0;pointer-events:none}
+.sticky b{font-size:16px}
+.sticky a{background:#FF8AD0;border:2px solid #17183B;border-radius:999px;padding:9px 18px;font-weight:800;color:#17183B;text-decoration:none}
+footer{padding-bottom:90px}
+}
+
+
+.choose{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:0}
+.oc{display:flex;flex-direction:column;gap:4px;text-align:left;font:inherit;color:#17183B;background:#FFFFFF;border:2px solid #17183B;border-radius:18px;padding:14px 16px;cursor:pointer;position:relative;transition:transform .15s,box-shadow .15s,background .15s}
+.oc:hover{transform:translate(-1px,-1px)}
+.oc[aria-checked="true"]{background:#DDF56B;box-shadow:4px 4px 0 #17183B}
+.oc .ot{font-weight:800;font-size:16px;padding-right:26px}
+.oc .op{font-family:'Instrument Serif',Georgia,serif;font-size:32px;line-height:1}
+.oc .od{font-size:14px;color:#3A3C66;line-height:1.4}
+.oc .ok{position:absolute;top:12px;right:12px;width:22px;height:22px;border-radius:50%;border:2px solid #17183B;background:#FFFFFF}
+.oc[aria-checked="true"] .ok{background:#17183B;box-shadow:inset 0 0 0 4px #FFFFFF}
+.hero .lede{margin-bottom:16px}
+.hero{position:relative}
+.tip{position:absolute;left:0;right:0;margin-top:10px;background:#17183B;color:#FFFFFF;border-radius:14px;padding:10px 14px;font-size:14px;line-height:1.45;opacity:0;transform:translateY(-6px);transition:opacity .25s,transform .25s;pointer-events:none;z-index:5}
+.tip.on{opacity:1;transform:none}
+.tip::before{content:"";position:absolute;top:-6px;width:12px;height:12px;background:#17183B;transform:rotate(45deg);left:var(--ax,25%)}
+[data-show]{display:none}
+.k-chat [data-show~="chat"],.k-consult [data-show~="consult"]{display:revert}
+@media (max-width:860px){.oc{padding:12px 13px}.oc .op{font-size:26px}.oc .od{font-size:13px}.choose{gap:10px}}
+</style>
+</head>
+<body class="k-consult">
+<header><div class="wrap top">
+<a class="logo serif it" href="/">koko.</a>
+<a class="back" href="/">← Back to the site</a>
+</div></header>
+<main class="wrap grid">
+<section class="hero">
+<span class="hand note">pick what suits you</span>
+<h1 class="serif">Book a <span class="it">call</span></h1>
+<p class="lede">Pick one, fill in your details, and choose your time after paying.</p>
+<div class="choose" role="radiogroup" aria-label="Choose your call">
+<button type="button" class="oc" role="radio" data-k="chat" aria-checked="false"><span class="ok" aria-hidden="true"></span><span class="ot">15-min chat</span><span class="op">₦30,000</span></button>
+<button type="button" class="oc" role="radio" data-k="consult" aria-checked="true"><span class="ok" aria-hidden="true"></span><span class="ot">1-hour consultation</span><span class="op">₦100,000</span></button>
+</div>
+<div class="tip" id="tip" role="status" aria-live="polite"></div>
+</section>
+<aside class="card" id="book">
+<h2 class="serif">Your <span class="it">details</span></h2>
+<p class="err" id="err" role="alert"></p>
+<form id="f" novalidate>
+<div class="pair"><div><label for="name">Your name</label><input id="name" name="name" autocomplete="name" required></div><div><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required></div></div>
+<div class="pair"><div><label for="phone">WhatsApp number</label><input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="0803 123 4567" required></div><div><label for="brand">Brand name</label><input id="brand" name="brand" autocomplete="organization" required></div></div>
+<label for="website">Website or Instagram <span class="opt" data-show="chat">(optional)</span></label><input id="website" name="website" inputmode="url" required>
+<label id="topicslabel">What should we focus on?</label><p class="hint">Tap all that apply.</p><div class="topics" id="topics" role="group" aria-labelledby="topicslabel"></div>
+<label for="notes">Anything else? <span class="opt">(optional)</span></label><input id="notes" name="notes" maxlength="300" placeholder="e.g. Cost per sale doubled last month">
+<button class="pay" type="submit" id="go">Pay ₦100,000 and book</button>
+<p class="small">Secure payment by Bachs: card or bank transfer. You pick your time right after.</p>
+</form>
+</aside>
+<section class="how">
+<h2 class="serif">How it <span class="it">works</span></h2>
+<ol class="steps" data-show="consult">
+<li class="step"><span class="dot" style="background:#FF8AD0">1</span><div><h3>Pay, then pick your day and time</h3><p>Right after paying, you choose the day and time that suits you.</p></div></li>
+<li class="step"><span class="dot" style="background:#DDF56B">2</span><div><h3>I look at your brand first</h3><p>Before we talk, I go through your ads, website and numbers.</p></div></li>
+<li class="step"><span class="dot" style="background:#FF6A2B">3</span><div><h3>We go through it together</h3><p>You leave knowing what to fix first, and in what order.</p></div></li>
+<li class="step"><span class="dot" style="background:#BFE1FF">4</span><div><h3>A check-in after 30 days</h3><p>About a month after the call, I check back in to see how the plan is going and what's changed.</p></div></li>
+</ol>
+<ol class="steps" data-show="chat">
+<li class="step"><span class="dot" style="background:#FF8AD0">1</span><div><h3>Pay, then pick your day and time</h3><p>Right after paying, you choose a time that suits you.</p></div></li>
+<li class="step"><span class="dot" style="background:#DDF56B">2</span><div><h3>Tell me what's on your mind</h3><p>The topics you pick tell me what to come ready for.</p></div></li>
+<li class="step"><span class="dot" style="background:#FF6A2B">3</span><div><h3>We talk for 15 minutes</h3><p>Ask me anything about your business, marketing or what you're building.</p></div></li>
+</ol>
+</section>
+</main>
+<div class="sticky" id="sticky"><b id="stickytxt">₦100,000 · 1 hour</b><a href="#book">Book now</a></div>
+<footer><div class="wrap top"><span>© 2026 Koko Chidozie</span><a href="/">kokochidozie.com</a></div></footer>
+<script>window.KC_STAGE = 'consultation';</script>
+<script src="/t.js" defer></script>
+<script>
+{
+  const OPTS = {
+    chat: { tip: 'A quick call to talk through your business. No prep needed.', price: '₦30,000', short: '₦30,000 · 15 min', path: '/chat', ph: 'e.g. I sell skincare and want to start ads',
+      topics: ['Running ads', 'Email marketing', 'SEO', 'Pricing', 'Starting something new', 'Growing my business', 'Something else'] },
+    consult: { tip: 'I go through your ads, site and numbers before we talk, then check in after 30 days.', price: '₦100,000', short: '₦100,000 · 1 hour', path: '/consultation', ph: 'e.g. Cost per sale doubled last month',
+      topics: ['Ads stopped working', 'Cost per sale is too high', 'Not sure what to spend', 'Email marketing', 'SEO', "Website isn't converting", 'Planning a launch'] }
+  };
+  const $ = (id) => document.getElementById(id);
+  const f = $('f'), err = $('err'), go = $('go'), bar = $('sticky');
+  let kind = 'consult';
+  function show(msg) { err.textContent = msg; err.style.display = msg ? 'block' : 'none'; }
+  function pick(k, push) {
+    kind = OPTS[k] ? k : 'consult';
+    const o = OPTS[kind];
+    document.body.className = 'k-' + kind;
+    document.querySelectorAll('.oc').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.k === kind)));
+    go.textContent = 'Pay ' + o.price + ' and book';
+    $('stickytxt').textContent = o.short;
+    $('website').required = kind === 'consult';
+    $('notes').placeholder = o.ph;
+    const keep = new Set([...document.querySelectorAll('.topic[aria-pressed="true"]')].map((b) => b.textContent));
+    $('topics').innerHTML = '';
+    o.topics.forEach((t) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'topic'; b.textContent = t; b.setAttribute('aria-pressed', String(keep.has(t)));
+      b.addEventListener('click', () => { b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') === 'true' ? 'false' : 'true'); show(''); if (window.kcStage) window.kcStage('filling'); });
+      $('topics').append(b);
+    });
+    if (push && location.pathname !== o.path) history.replaceState(null, '', o.path + location.search);
+  }
+  let tipTimer;
+  function tip(k) {
+    const t = $('tip');
+    t.textContent = OPTS[k].tip;
+    t.style.setProperty('--ax', k === 'chat' ? '22%' : '72%');
+    t.classList.add('on');
+    clearTimeout(tipTimer);
+    tipTimer = setTimeout(() => t.classList.remove('on'), 3500);
+  }
+  document.querySelectorAll('.oc').forEach((b) => b.addEventListener('click', () => { pick(b.dataset.k, true); show(''); tip(b.dataset.k); }));
+  const q = new URLSearchParams(location.search).get('call');
+  pick(q === 'chat' || /\/chat\/?$/.test(location.pathname) ? 'chat' : 'consult', false);
+
+  // "Book now" takes them to the next thing they need to fill in, or pays if everything is done.
+  bar.querySelector('a').addEventListener('click', (e) => {
+    e.preventDefault();
+    const empty = [...f.querySelectorAll('input[required]')].find((i) => !i.value.trim());
+    if (empty) { empty.scrollIntoView({ block: 'center', behavior: 'smooth' }); empty.focus({ preventScroll: true }); }
+    else f.requestSubmit();
+  });
+  if ('IntersectionObserver' in window) new IntersectionObserver((es) => es.forEach((e) => bar.classList.toggle('off', e.isIntersecting)), { threshold: 0.05 }).observe(go);
+  f.addEventListener('input', function () { if (window.kcStage) window.kcStage('filling'); }, { once: true });
+  f.addEventListener('submit', async function (e) {
+    e.preventDefault(); show('');
+    const d = Object.fromEntries(new FormData(f));
+    const picked = [...document.querySelectorAll('.topic[aria-pressed="true"]')].map((b) => b.textContent);
+    if (picked.length) d.notes = 'Topics: ' + picked.join(', ') + (String(d.notes || '').trim() ? '\n\n' + d.notes.trim() : '');
+    const need = [['name','your name'],['email','your email'],['phone','your phone number'],['brand','your brand name']];
+    if (kind === 'consult') need.push(['website','your website or Instagram']);
+    need.push(['notes','at least one topic']);
+    const missing = need.filter(([k]) => !String(d[k] || '').trim());
+    if (missing.length) { show('Please add ' + missing.map((m) => m[1]).join(', ') + '.'); (missing[0][0] === 'notes' ? $('topics') : $(missing[0][0])).scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email.trim())) { show('Please check your email address.'); $('email').focus(); return; }
+    if (String(d.phone).replace(/\D/g, '').length < 10) { show('Please check your phone number.'); $('phone').focus(); return; }
+    let src = {};
+    try { src = JSON.parse(localStorage.getItem('kc_src') || '{}'); } catch (x) {}
+    d.product = kind; d.source = src.s || 'Direct'; d.campaign = src.c || ''; d.vid = window.kcVid || '';
+    go.disabled = true; go.textContent = 'Opening secure payment…';
+    try {
+      try { localStorage.setItem('kc_pop', 'email|' + Date.now()); } catch (e) {}
+      const r = await fetch('/api/checkout', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(d) });
+      const j = await r.json();
+      if (!r.ok || !j.url) throw new Error(j.error || 'Something went wrong. Please try again.');
+      location.href = j.url;
+    } catch (x) {
+      show(x.message || 'Something went wrong. Please try again.');
+      go.disabled = false; go.textContent = 'Pay ' + OPTS[kind].price + ' and book';
+    }
+  });
+}
+</script>
+</body>
+</html>
