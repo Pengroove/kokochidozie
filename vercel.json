@@ -4,5 +4,8 @@
     { "source": "/consultation", "destination": "/book" },
     { "source": "/chat", "destination": "/book" }
   ],
-  "crons": [{ "path": "/api/cron", "schedule": "0 * * * *" }]
+  "crons": [
+    { "path": "/api/cron", "schedule": "0 * * * *" },
+    { "path": "/api/cron-quick", "schedule": "*/5 * * * *" }
+  ]
 }

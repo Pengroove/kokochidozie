@@ -216,6 +216,24 @@ footer{padding-bottom:90px}
   });
   if ('IntersectionObserver' in window) new IntersectionObserver((es) => es.forEach((e) => bar.classList.toggle('off', e.isIntersecting)), { threshold: 0.05 }).observe(go);
   f.addEventListener('input', function () { if (window.kcStage) window.kcStage('filling'); }, { once: true });
+  // Save what's been typed so far (once there's a valid email or phone), so an unfinished form can be followed up.
+  let lastLead = '';
+  function saveLead() {
+    const d = Object.fromEntries(new FormData(f));
+    const topics = [...document.querySelectorAll('.topic[aria-pressed="true"]')].map((b) => b.textContent).join(', ');
+    const okEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(d.email || '').trim());
+    if (!okEmail && String(d.phone || '').replace(/\D/g, '').length < 10) return;
+    let src = {}; try { src = JSON.parse(localStorage.getItem('kc_src') || '{}'); } catch (x) {}
+    const body = JSON.stringify({ vid: window.kcVid || '', product: kind, name: d.name, email: d.email, phone: d.phone, brand: d.brand, topics, source: src.s || 'Direct' });
+    if (body === lastLead || !window.kcVid) return;
+    lastLead = body;
+    try { if (navigator.sendBeacon && navigator.sendBeacon('/api/lead', body)) return; } catch (x) {}
+    fetch('/api/lead', { method: 'POST', body, keepalive: true }).catch(() => {});
+  }
+  f.addEventListener('focusout', saveLead);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') saveLead(); });
+  document.getElementById('topics').addEventListener('click', () => setTimeout(saveLead, 0));
+  document.querySelectorAll('.oc').forEach((b) => b.addEventListener('click', () => setTimeout(saveLead, 0)));
   f.addEventListener('submit', async function (e) {
     e.preventDefault(); show('');
     const d = Object.fromEntries(new FormData(f));

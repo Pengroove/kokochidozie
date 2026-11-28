@@ -28,6 +28,8 @@ export async function POST(request) {
     await sql`INSERT INTO kc_bookings (id, name, email, phone, brand, website, notes, source, campaign, amount, currency, product)
               VALUES (${id}, ${name}, ${email}, ${phone}, ${brand}, ${website || ''}, ${notes},
                       ${source}, ${clean(b.campaign, 80) || null}, ${PRICE}, ${CURRENCY}, ${kind})`;
+    // The form was submitted, so this is no longer an abandoned form.
+    await sql`UPDATE kc_leads SET booking_id = ${id}, updated_at = now() WHERE (vid = ${vid || ''} OR lower(email) = lower(${email})) AND booking_id IS NULL`;
     if (vid) {
       await sql`INSERT INTO kc_events (vid, kind) VALUES (${vid}, 'checkout') ON CONFLICT DO NOTHING`;
       await sql`UPDATE kc_live SET stage = 'payment', last_seen = now() WHERE vid = ${vid}`;

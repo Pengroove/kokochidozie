@@ -75,7 +75,7 @@
   function check() {
     if (shown) return;
     var h = document.documentElement.scrollHeight - innerHeight;
-    if (h > 0 && scrollY / h >= 0.45) { shown = true; removeEventListener('scroll', check); build(); }
+    if (h > 0 && scrollY / h >= 0.30) { shown = true; removeEventListener('scroll', check); build(); }
   }
   addEventListener('scroll', check, { passive: true });
 })();

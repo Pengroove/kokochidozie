@@ -77,6 +77,8 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
 .empty{color:#3A3C66;font-size:15px;padding:8px 0;margin:0}
 .livehead{display:grid;grid-template-columns:minmax(0,1.2fr) repeat(4,minmax(0,1fr));gap:12px}
 .lt{background:#FFFFFF;border:2px solid #17183B;border-radius:16px;padding:14px 16px;box-shadow:3px 3px 0 #17183B}
+.abh{margin:18px 0 8px;font-size:15px}
+.price{display:inline-block;background:#DDF56B;border:1.5px solid #17183B;border-radius:999px;padding:1px 9px;font-size:12px;font-weight:800;margin-left:6px}
 .behhead{grid-template-columns:minmax(0,1.2fr) repeat(4,minmax(0,1fr))}
 .lt.big{background:#17183B;color:#FFFFFF}
 .lt .k{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
@@ -214,7 +216,9 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
 <form id="testform" style="display:flex;gap:10px;flex-wrap:wrap"><input id="testto" type="email" required placeholder="you@email.com" style="flex:1;min-width:200px;padding:10px 12px;border:2px solid #17183B;border-radius:10px;font:inherit"><button type="submit" style="padding:10px 18px;border:2px solid #17183B;border-radius:999px;background:#FF8AD0;font:inherit;font-weight:700;cursor:pointer">Send test</button></form>
 <p id="testmsg" class="sub" style="margin-top:8px"></p></div>
 <div class="board" id="board"></div>
-<div class="panel" style="margin-top:18px"><h3 class="serif">Started but <span class="it">didn't pay</span></h3><p class="sub">Filled the form and opened payment, but no payment has come through. The admin checks Bachs each time it loads, so a real payment moves to the board by itself. If you can see one in Bachs that hasn't, tap Mark as paid.</p><div id="unpaid"></div></div>
+<div class="panel" style="margin-top:18px"><h3 class="serif">Didn't <span class="it">finish</span></h3><p class="sub" id="abSum">People who started booking but didn't pay. Follow-up emails go out by themselves: 20 minutes after an unfinished payment and 15 minutes after an unfinished form, then once more the next day. They stop as soon as someone pays.</p>
+<h4 class="abh">Got to payment, didn't pay</h4><div id="unpaid"></div>
+<h4 class="abh">Started the form, didn't submit</h4><div id="abforms"></div></div>
 </div>
 </main>
 </section>
@@ -339,7 +343,7 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
 
   async function update(id, body) { await api('/api/admin-booking', { method: 'POST', body: JSON.stringify({ id, ...body }) }); }
   const STAGES = [['paid', 'Paid · waiting for a time'], ['scheduled', 'Call booked'], ['audit_done', 'Audit done'], ['support', 'Call done · check-in at 30 days'], ['closed', 'Closed']];
-  const ELABEL = { paid: 'Payment email', scheduled: 'Booking + questions', remind_day: 'Day-before reminder', remind_morning: 'Morning reminder', after_call: 'Thank-you', review: 'Review ask', support_ending: '30-day check-in' };
+  const ELABEL = { paid: 'Payment email', scheduled: 'Booking + questions', remind_day: 'Day-before reminder', remind_morning: 'Morning reminder', after_call: 'Thank-you', review: 'Review ask', support_ending: '30-day check-in', abandon_1: 'Follow-up 1', abandon_2: 'Follow-up 2', form_1: 'Follow-up 1', form_2: 'Follow-up 2' };
   function renderBoard(d) {
     $('emailoff').classList.toggle('hidden', !!d.emailsOn);
     const list = d.bookings.filter((b) => b.status === 'paid');
@@ -379,7 +383,7 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
     if (!unpaid.length) box.append(el('p', 'empty', 'Nobody so far.'));
     unpaid.forEach((b) => {
       const r = el('div', 'urow');
-      const a = el('div'); a.append(el('div', 'nm', (b.name || '') + (b.brand ? ' · ' + b.brand : '') + (b.product === 'chat' ? ' · 15-min chat' : ''))); a.append(el('div', 'more', fmt(b.created_at) + (b.source ? ' · via ' + b.source : ''))); r.append(a);
+      const a = el('div'); const nm = el('div', 'nm', (b.name || '') + (b.brand ? ' · ' + b.brand : '')); nm.append(el('span', 'price', (b.product === 'chat' ? '15-min chat · ' : '1-hour consultation · ') + naira(b.amount))); a.append(nm); const es = Object.keys(b.emails || {}).filter((k) => k.startsWith('abandon')); if (es.length) a.append(el('div', 'more', '✓ ' + es.map((k) => ELABEL[k]).join(' · ') + ' sent')); a.append(el('div', 'more', fmt(b.created_at) + (b.source ? ' · via ' + b.source : ''))); r.append(a);
       r.append(el('div', 'uc more', [b.email, b.phone].filter(Boolean).join('\n')));
       const act = el('div'); act.style.display = 'flex'; act.style.gap = '8px'; act.style.flexWrap = 'wrap';
       if (b.phone) { const w = el('a', 'wa', 'WhatsApp'); w.href = waLink(b.phone); w.target = '_blank'; w.rel = 'noopener'; act.append(w); }
@@ -392,6 +396,23 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
       act.append(mp); r.append(act);
       box.append(r);
     });
+    const fb = $('abforms'); fb.replaceChildren();
+    const forms = d.abandonedForms || [];
+    if (!forms.length) fb.append(el('p', 'empty', 'Nobody so far.'));
+    forms.forEach((l) => {
+      const r = el('div', 'urow');
+      const a = el('div'); const nm = el('div', 'nm', (l.name || 'No name yet') + (l.brand ? ' · ' + l.brand : ''));
+      nm.append(el('span', 'price', (l.product === 'chat' ? '15-min chat · ₦30,000' : '1-hour consultation · ₦100,000'))); a.append(nm);
+      a.append(el('div', 'more', fmt(l.updated_at) + (l.source ? ' · via ' + l.source : '') + (l.topics ? ' · ' + l.topics : '')));
+      const es = Object.keys(l.emails || {}); if (es.length) a.append(el('div', 'more', '✓ ' + es.map((k) => ELABEL[k]).join(' · ') + ' sent'));
+      r.append(a);
+      r.append(el('div', 'uc more', [l.email, l.phone].filter(Boolean).join('\n')));
+      const act = el('div');
+      if (l.phone) { const w = el('a', 'wa', 'WhatsApp'); w.href = waLink(l.phone); w.target = '_blank'; w.rel = 'noopener'; act.append(w); }
+      r.append(act); fb.append(r);
+    });
+    const value = unpaid.reduce((t, b) => t + Number(b.amount || 0), 0) + forms.reduce((t, l) => t + (l.product === 'chat' ? 30000 : 100000), 0);
+    $('abSum').textContent = (unpaid.length + forms.length) + ' people started booking but did not finish paying, worth ' + naira(value) + ' in total. Follow-up emails go out by themselves: 20 minutes after an unfinished payment and 15 minutes after an unfinished form, then once more the next day. They stop as soon as someone pays.';
   }
 
   function renderLive(d) {

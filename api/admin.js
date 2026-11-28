@@ -33,6 +33,10 @@ export async function GET(request) {
     sql`SELECT email, answer, source, country, city, email_at FROM kc_popup WHERE email IS NOT NULL ORDER BY email_at DESC LIMIT 2000`
   ]);
   const W = days;
+  const abandonedForms = await sql`SELECT vid, created_at, updated_at, product, name, email, phone, brand, topics, source, emails FROM kc_leads l
+    WHERE booking_id IS NULL AND updated_at > now() - make_interval(days => ${W})
+      AND NOT EXISTS (SELECT 1 FROM kc_bookings b WHERE (lower(b.email) = lower(l.email) OR b.phone = l.phone) AND b.created_at > l.created_at - interval '1 day')
+    ORDER BY updated_at DESC LIMIT 100`;
   const [eng, reach, clicks, devices, returning, pages] = await Promise.all([
     sql`SELECT count(*)::int AS n, COALESCE(percentile_cont(0.5) WITHIN GROUP (ORDER BY secs), 0)::float AS med_secs,
                COALESCE(avg(max_pct), 0)::float AS avg_pct,
@@ -56,5 +60,5 @@ export async function GET(request) {
   return json({ days, totals: visits[0], bySource, booked, daily, bookings: recent, places,
     funnel: { consult: f.consult || 0, form: f.form || 0, checkout: f.checkout || 0 }, emailsOn: emailsOn(),
     popup: { ...popStats[0], answers: popAnswers, emails: popEmails }, sync,
-    engage: { ...eng[0], reach, clicks, devices, returning: returning[0], pages } });
+    abandonedForms, engage: { ...eng[0], reach, clicks, devices, returning: returning[0], pages } });
 }
