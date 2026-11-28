@@ -77,6 +77,9 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
 .empty{color:#3A3C66;font-size:15px;padding:8px 0;margin:0}
 .livehead{display:grid;grid-template-columns:minmax(0,1.2fr) repeat(4,minmax(0,1fr));gap:12px}
 .lt{background:#FFFFFF;border:2px solid #17183B;border-radius:16px;padding:14px 16px;box-shadow:3px 3px 0 #17183B}
+.abtot{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
+.abt.big span{font-size:clamp(20px,6vw,30px);overflow-wrap:anywhere}
+.abt.lime{background:#DDF56B}
 .abtest{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
 .abt{border:2px solid #17183B;border-radius:14px;padding:10px 12px;background:#FFFFFF}
 .abt b{display:block;font-size:13px}
@@ -222,6 +225,7 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
 <p id="testmsg" class="sub" style="margin-top:8px"></p></div>
 <div class="board" id="board"></div>
 <div class="panel" style="margin-top:18px"><h3 class="serif">Didn't <span class="it">finish</span></h3><p class="sub" id="abSum">People who started booking but didn't pay. Follow-ups go out by themselves: the first after 5 or 15 minutes (a timing test, results below), the second after 12 hours, and a personal note from you after 2 days. They stop as soon as someone pays.</p>
+<div class="abtot"><div class="abt big"><b>Didn't finish</b><span id="abN">0</span><small>people</small></div><div class="abt big lime"><b>You'd have made</b><span id="abV">₦0</span><small>if they had paid</small></div></div>
 <div class="abtest" id="abtest"></div>
 <h4 class="abh">Got to payment, didn't pay</h4><div id="unpaid"></div>
 <h4 class="abh">Started the form, didn't submit</h4><div id="abforms"></div></div>
@@ -424,7 +428,8 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
       t.append(el('small', '', g.booked + ' booked out of ' + g.sent + ' emailed')); abBox.append(t);
     });
     const value = unpaid.reduce((t, b) => t + Number(b.amount || 0), 0) + forms.reduce((t, l) => t + (l.product === 'chat' ? 30000 : 100000), 0);
-    $('abSum').textContent = (unpaid.length + forms.length) + ' people started booking but did not finish paying, worth ' + naira(value) + ' in total. Follow-ups go out by themselves: the first after 5 or 15 minutes (a timing test, results below), the second after 12 hours, and a personal note from you after 2 days. They stop as soon as someone pays.';
+    $('abN').textContent = unpaid.length + forms.length; $('abV').textContent = naira(value);
+    $('abSum').textContent = 'People who started booking but did not pay. Follow-ups go out by themselves: the first after 5 or 15 minutes (a timing test, results below), the second after 12 hours, and a personal note from you after 2 days. They stop as soon as someone pays.';
   }
 
   function renderLive(d) {
