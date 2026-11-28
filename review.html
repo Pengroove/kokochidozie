@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leave a review · Koko Chidozie</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="Book a call with Koko: a quick 15-minute chat, or a 1-hour growth consultation where I review your ads, site and numbers first.">
+<meta property="og:title" content="Book a call · Koko Chidozie">
+<meta property="og:description" content="A quick 15-minute chat, or a full 1-hour growth consultation.">
+<meta property="og:url" content="https://www.kokochidozie.com/consultation">
+
+<meta property="og:image" content="https://www.kokochidozie.com/og-home.png">
+<meta property="og:image:width" content="2400">
+<meta property="og:image:height" content="1260">
+<meta name="twitter:image" content="https://www.kokochidozie.com/og-home.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#BFE1FF">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23FF8AD0'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-family='Georgia,serif' font-style='italic' font-size='36' fill='%2317183B'%3Ek%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Figtree:wght@400;500;600;700;800&amp;family=Caveat:wght@700&amp;display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#BFE1FF;color:#17183B;font:17px/1.55 Figtree,system-ui,sans-serif;display:grid;place-items:center;padding:20px}
+.serif{font-family:'Instrument Serif',Georgia,serif;font-weight:400}.it{font-style:italic}
+.card{width:min(520px,100%);background:#fff;border:2px solid #17183B;border-radius:24px;padding:clamp(22px,5vw,34px);box-shadow:6px 6px 0 #17183B}
+h1{font-size:clamp(36px,8vw,48px);line-height:1.05;margin:0 0 6px}
+.sub{color:#3A3C66;margin:0 0 20px;font-size:16px}
+label{display:block;font-weight:700;font-size:15px;margin:0 0 6px}
+.opt{font-weight:500;color:#5A5C80}
+input,textarea{width:100%;font:inherit;font-size:16px;color:#17183B;border:2px solid #17183B;border-radius:12px;padding:11px 13px;background:#fff;margin-bottom:14px}
+textarea{min-height:120px;resize:vertical}
+.stars{display:flex;gap:6px;margin:0 0 16px}
+.star{font-size:38px;line-height:1;background:none;border:0;padding:0 2px;cursor:pointer;color:#C9CBE0;transition:transform .12s}
+.star.on{color:#FFB800}.star:hover{transform:scale(1.12)}
+.ok{display:flex;gap:10px;align-items:flex-start;font-weight:500;font-size:15px;margin:0 0 18px}
+.ok input{width:20px;height:20px;margin:2px 0 0;flex:none}
+.go{width:100%;min-height:52px;border:2px solid #17183B;border-radius:999px;background:#FF8AD0;color:#17183B;font:inherit;font-weight:800;font-size:17px;cursor:pointer;box-shadow:4px 4px 0 #17183B}
+.err{background:#FFE1E1;border:2px solid #B3261E;color:#7A1A14;border-radius:12px;padding:10px 14px;margin:0 0 14px;font-size:15px;display:none}
+.hidden{display:none}
+a{color:#2E45F5}
+</style>
+</head>
+<body>
+<main class="card">
+<div id="formview">
+<h1 class="serif">How did it <span class="it">go?</span></h1>
+<p class="sub">A star rating and a line or two. Takes under a minute, and it helps other business owners decide.</p>
+<p class="err" id="err" role="alert"></p>
+<form id="f" novalidate>
+<label id="rl">Your rating</label>
+<div class="stars" role="radiogroup" aria-labelledby="rl" id="stars"></div>
+<label for="body">What was it like?</label><textarea id="body" name="body" maxlength="1200" placeholder="What did you get from the call, and what changed after?"></textarea>
+<label for="name">Your name</label><input id="name" name="name" autocomplete="name" maxlength="80">
+<label for="brand">Brand <span class="opt">(optional)</span></label><input id="brand" name="brand" autocomplete="organization" maxlength="80">
+<label class="ok"><input type="checkbox" id="consent"> <span>I'm happy for this review to be shown on kokochidozie.com</span></label>
+<button class="go" type="submit" id="go">Send my review</button>
+</form>
+</div>
+<div id="thanks" class="hidden">
+<h1 class="serif">Thank <span class="it">you</span></h1>
+<p class="sub">Your review is in. I really appreciate you taking the time.</p>
+<a href="/">Back to the site</a>
+</div>
+</main>
+<script>
+{
+  const $ = (id) => document.getElementById(id);
+  const ref = new URLSearchParams(location.search).get('ref') || '';
+  let rating = 0;
+  const box = $('stars');
+  for (let i = 1; i <= 5; i++) {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'star'; b.textContent = '★';
+    b.setAttribute('role', 'radio'); b.setAttribute('aria-label', i + (i === 1 ? ' star' : ' stars'));
+    b.onclick = () => { rating = i; [...box.children].forEach((s, k) => { s.classList.toggle('on', k < i); s.setAttribute('aria-checked', String(k === i - 1)); }); };
+    box.append(b);
+  }
+  function show(m) { $('err').textContent = m; $('err').style.display = m ? 'block' : 'none'; }
+  $('f').addEventListener('submit', async (e) => {
+    e.preventDefault(); show('');
+    const d = { rating, body: $('body').value.trim(), name: $('name').value.trim(), brand: $('brand').value.trim(), consent: $('consent').checked, ref };
+    if (!rating) return show('Please tap a star rating.');
+    if (!d.body) return show('Please add a few words about the call.');
+    if (!d.name) return show('Please add your name.');
+    if (!d.consent) return show('Please tick the box so I can show your review.');
+    $('go').disabled = true; $('go').textContent = 'Sending…';
+    try {
+      const r = await fetch('/api/reviews', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(d) });
+      const j = await r.json();
+      if (!r.ok) throw new Error(j.error || 'Something went wrong.');
+      $('formview').classList.add('hidden'); $('thanks').classList.remove('hidden');
+    } catch (x) { show(x.message); $('go').disabled = false; $('go').textContent = 'Send my review'; }
+  });
+}
+</script>
+</body>
+</html>

@@ -48,6 +48,7 @@ export async function GET(request) {
     const g = abTest[abGroup(f.key)]; g.sent++;
     if (paidEmails.some((p) => p.email === String(f.email || '').toLowerCase() && new Date(p.paid_at) >= new Date(f.at))) g.booked++;
   }
+  const reviews = await sql`SELECT id, created_at, name, brand, rating, body, product, status, booking_id FROM kc_reviews ORDER BY created_at DESC LIMIT 100`;
   const [eng, reach, clicks, devices, returning, pages] = await Promise.all([
     sql`SELECT count(*)::int AS n, COALESCE(percentile_cont(0.5) WITHIN GROUP (ORDER BY secs), 0)::float AS med_secs,
                COALESCE(avg(max_pct), 0)::float AS avg_pct,
@@ -71,5 +72,5 @@ export async function GET(request) {
   return json({ days, totals: visits[0], bySource, booked, daily, bookings: recent, places,
     funnel: { consult: f.consult || 0, form: f.form || 0, checkout: f.checkout || 0 }, emailsOn: emailsOn(),
     popup: { ...popStats[0], answers: popAnswers, emails: popEmails }, sync,
-    abandonedForms, abTest, engage: { ...eng[0], reach, clicks, devices, returning: returning[0], pages } });
+    abandonedForms, abTest, reviews, engage: { ...eng[0], reach, clicks, devices, returning: returning[0], pages } });
 }

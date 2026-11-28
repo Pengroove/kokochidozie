@@ -224,9 +224,11 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
 <form id="testform" style="display:flex;gap:10px;flex-wrap:wrap"><input id="testto" type="email" required placeholder="you@email.com" style="flex:1;min-width:200px;padding:10px 12px;border:2px solid #17183B;border-radius:10px;font:inherit"><button type="submit" style="padding:10px 18px;border:2px solid #17183B;border-radius:999px;background:#FF8AD0;font:inherit;font-weight:700;cursor:pointer">Send all test emails</button></form>
 <p id="testmsg" class="sub" style="margin-top:8px"></p></div>
 <div class="board" id="board"></div>
+<div class="panel" style="margin-top:18px"><h3 class="serif"><span class="it">Reviews</span></h3><p class="sub">Clients leave these through the "Leave a review" link in your review-request email (or share <b>kokochidozie.com/review</b> yourself). Nothing shows on your site until you approve it.</p><div id="revs"></div></div>
 <div class="panel" style="margin-top:18px"><h3 class="serif">Didn't <span class="it">finish</span></h3><p class="sub" id="abSum">People who started booking but didn't pay. Follow-ups go out by themselves: the first after 5 or 15 minutes (a timing test, results below), the second after 12 hours, and a personal note from you after 2 days. They stop as soon as someone pays.</p>
 <div class="abtot"><div class="abt big"><b>Didn't finish</b><span id="abN">0</span><small>people</small></div><div class="abt big lime"><b>You'd have made</b><span id="abV">₦0</span><small>if they had paid</small></div></div>
 <div class="abtest" id="abtest"></div>
+<p style="margin:14px 0 0"><button type="button" id="fuAll" class="wa" style="cursor:pointer;background:#FF8AD0">Send follow-up to everyone who hasn't had one</button> <span id="fuMsg" class="more"></span></p>
 <h4 class="abh">Got to payment, didn't pay</h4><div id="unpaid"></div>
 <h4 class="abh">Started the form, didn't submit</h4><div id="abforms"></div></div>
 </div>
@@ -351,6 +353,47 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
     bars($('devices'), e.devices.map((x) => ({ name: x.device, n: x.n })), (r) => el('span', 'tag', pct(r.n, devTotal)), true);
   }
 
+  async function followup(body) {
+    const r = await fetch('/api/admin-followup', { method: 'POST', headers: { authorization: 'Bearer ' + pw, 'content-type': 'application/json' }, body: JSON.stringify(body) });
+    return r.json().catch(() => ({}));
+  }
+  function fuBtn(type, id, emails, prefix = 'abandon') {
+    const e = emails || {};
+    const n = [1, 2, 3].find((k) => !e[prefix + '_' + k]);
+    const b = el('button', 'wa', n ? (n === 1 ? 'Send follow-up' : 'Send follow-up ' + n) : 'All follow-ups sent');
+    b.type = 'button'; b.style.cursor = 'pointer'; b.style.background = '#FFFFFF';
+    if (!n) { b.disabled = true; return b; }
+    b.onclick = async () => { b.disabled = true; b.textContent = 'Sending…'; const j = await followup({ type, id }); b.textContent = j.sent ? 'Sent ✓' : (j.error || 'Not sent'); setTimeout(loadMain, 1200); };
+    return b;
+  }
+  $('fuAll').addEventListener('click', async () => {
+    if (!confirm('Send the first follow-up email to everyone who started booking and has not had one yet?')) return;
+    const b = $('fuAll'); b.disabled = true; $('fuMsg').textContent = 'Sending…';
+    const j = await followup({ all: true });
+    $('fuMsg').textContent = j.ok ? 'Sent ' + j.sent + (j.skipped ? ', skipped ' + j.skipped + ' (already paid or emailed)' : '') + '. The rest of their emails follow on the usual timing.' : (j.error || 'Could not send.');
+    b.disabled = false; loadMain();
+  });
+
+  function renderReviews(d) {
+    const box = $('revs'); box.replaceChildren();
+    const rs = d.reviews || [];
+    if (!rs.length) { box.append(el('p', 'empty', 'No reviews yet.')); return; }
+    rs.forEach((v) => {
+      const r = el('div', 'urow');
+      const a = el('div'); a.append(el('div', 'nm', '★'.repeat(v.rating) + ' · ' + v.name + (v.brand ? ' · ' + v.brand : '')));
+      a.append(el('div', 'more', v.body)); a.append(el('div', 'more', fmt(v.created_at) + ' · ' + (v.status === 'approved' ? 'On your site' : v.status === 'hidden' ? 'Hidden' : 'Waiting for you') + (v.booking_id ? ' · from a paid booking' : '')));
+      r.append(a); r.append(el('div'));
+      const act = el('div'); act.style.display = 'flex'; act.style.gap = '8px';
+      [['approved', 'Show on site'], ['hidden', 'Hide']].forEach(([st, label]) => {
+        if (v.status === st) return;
+        const btn = el('button', 'wa', label); btn.type = 'button'; btn.style.cursor = 'pointer'; if (st === 'approved') btn.style.background = '#DDF56B';
+        btn.onclick = async () => { btn.disabled = true; await fetch('/api/admin-review', { method: 'POST', headers: { authorization: 'Bearer ' + pw, 'content-type': 'application/json' }, body: JSON.stringify({ id: v.id, status: st }) }); loadMain(); };
+        act.append(btn);
+      });
+      r.append(act); box.append(r);
+    });
+  }
+
   async function update(id, body) { await api('/api/admin-booking', { method: 'POST', body: JSON.stringify({ id, ...body }) }); }
   const STAGES = [['paid', 'Paid · waiting for a time'], ['scheduled', 'Call booked'], ['audit_done', 'Audit done'], ['support', 'Call done · check-in at 30 days'], ['closed', 'Closed']];
   const ELABEL = { paid: 'Payment email', scheduled: 'Booking + questions', remind_day: 'Day-before reminder', remind_morning: 'Morning reminder', after_call: 'Thank-you', review: 'Review ask', support_ending: '30-day check-in', abandon_1: 'Follow-up 1', abandon_2: 'Follow-up 2', abandon_3: 'Personal note', form_1: 'Follow-up 1', form_2: 'Follow-up 2', form_3: 'Personal note' };
@@ -403,7 +446,7 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
         mp.disabled = true; mp.textContent = 'Saving…';
         try { await update(b.id, { markPaid: true }); loadMain(); } catch (err) { mp.disabled = false; mp.textContent = 'Mark as paid'; }
       };
-      act.append(mp); r.append(act);
+      act.append(fuBtn('booking', b.id, b.emails)); act.append(mp); r.append(act);
       box.append(r);
     });
     const fb = $('abforms'); fb.replaceChildren();
@@ -418,7 +461,9 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
       r.append(a);
       r.append(el('div', 'uc more', [l.email, l.phone].filter(Boolean).join('\n')));
       const act = el('div');
+      act.style.display = 'flex'; act.style.gap = '8px'; act.style.flexWrap = 'wrap';
       if (l.phone) { const w = el('a', 'wa', 'WhatsApp'); w.href = waLink(l.phone); w.target = '_blank'; w.rel = 'noopener'; act.append(w); }
+      if (l.email) act.append(fuBtn('lead', l.vid, l.emails, 'form'));
       r.append(act); fb.append(r);
     });
     const ab = d.abTest || { A: { sent: 0, booked: 0 }, B: { sent: 0, booked: 0 } };
@@ -451,7 +496,7 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
   }
 
   async function loadMain() {
-    try { const d = await api('/api/admin?days=' + days); renderOverview(d); renderPopup(d); renderBehaviour(d); renderBoard(d); }
+    try { const d = await api('/api/admin?days=' + days); renderOverview(d); renderPopup(d); renderBehaviour(d); renderBoard(d); renderReviews(d); }
     catch (e) { if (e.message === 'Wrong password') logout('Wrong password.'); }
   }
   async function loadLive() {

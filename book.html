@@ -106,6 +106,16 @@ footer{padding-bottom:90px}
 .oc .ok{position:absolute;top:12px;right:12px;width:22px;height:22px;border-radius:50%;border:2px solid #17183B;background:#FFFFFF}
 .oc[aria-checked="true"] .ok{background:#17183B;box-shadow:inset 0 0 0 4px #FFFFFF}
 .hero .lede{margin-bottom:16px}
+.rate{display:inline-flex;align-items:center;gap:8px;font:inherit;font-weight:700;font-size:14px;color:#17183B;background:#FFFFFF;border:2px solid #17183B;border-radius:999px;padding:6px 13px;cursor:pointer;box-shadow:3px 3px 0 #17183B;margin:0 0 14px}
+.rate.hidden{display:none}
+.rstars{color:#FFB800;letter-spacing:1px}
+.rchev{transition:transform .2s}.rate[aria-expanded="true"] .rchev{transform:rotate(180deg)}
+.rpanel{margin:0 0 16px}
+.rlist{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(240px,300px);gap:12px;overflow-x:auto;padding:4px 6px 10px 2px;scroll-snap-type:x mandatory}
+.rcard{scroll-snap-align:start;background:#FFFFFF;border:2px solid #17183B;border-radius:16px;padding:14px 16px;box-shadow:3px 3px 0 #17183B}
+.rcard .rs{color:#FFB800;font-size:16px;letter-spacing:1px}
+.rcard p{margin:4px 0 8px;font-size:15px;color:#17183B}
+.rcard b{font-size:14px}.rcard small{display:block;color:#3A3C66;font-size:13px}
 .hero{position:relative}
 .tip{position:absolute;left:0;right:0;margin-top:10px;background:#17183B;color:#FFFFFF;border-radius:14px;padding:10px 14px;font-size:14px;line-height:1.45;opacity:0;transform:translateY(-6px);transition:opacity .25s,transform .25s;pointer-events:none;z-index:5}
 .tip.on{opacity:1;transform:none}
@@ -125,6 +135,8 @@ footer{padding-bottom:90px}
 <span class="hand note">pick what suits you</span>
 <h1 class="serif">Book a <span class="it">call</span></h1>
 <p class="lede">Pick one, fill in your details, and choose your time after paying.</p>
+<button type="button" class="rate hidden" id="rateBtn" aria-expanded="false" aria-controls="ratePanel"><span class="rstars" aria-hidden="true">★★★★★</span><span id="rateTxt"></span><span class="rchev" aria-hidden="true">▾</span></button>
+<div class="rpanel" id="ratePanel" hidden><div class="rlist" id="rateList"></div></div>
 <div class="choose" role="radiogroup" aria-label="Choose your call">
 <button type="button" class="oc" role="radio" data-k="chat" aria-checked="false"><span class="ok" aria-hidden="true"></span><span class="ot">15-min chat</span><span class="op">₦30,000</span></button>
 <button type="button" class="oc" role="radio" data-k="consult" aria-checked="true"><span class="ok" aria-hidden="true"></span><span class="ot">1-hour consultation</span><span class="op">₦100,000</span></button>
@@ -194,6 +206,16 @@ footer{padding-bottom:90px}
     });
     if (push && location.pathname !== o.path) history.replaceState(null, '', o.path + location.search);
   }
+
+  // Reviews: only shows once there's at least one approved review.
+  fetch('/api/reviews').then((r) => r.json()).then((d) => {
+    if (!d || !d.count) return;
+    const e = (t) => String(t || '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    $('rateTxt').textContent = d.average.toFixed(1) + ' from ' + d.count + (d.count === 1 ? ' review' : ' reviews') + ' · tap to read';
+    $('rateList').innerHTML = d.reviews.map((x) => '<article class="rcard"><div class="rs" aria-label="' + x.rating + ' out of 5">' + '★★★★★'.slice(0, x.rating) + '</div><p>' + e(x.body) + '</p><b>' + e(x.name) + '</b><small>' + e([x.brand, x.product === 'chat' ? '15-min chat' : x.product ? '1-hour consultation' : ''].filter(Boolean).join(' · ')) + '</small></article>').join('');
+    const btn = $('rateBtn'); btn.classList.remove('hidden');
+    btn.addEventListener('click', () => { const open = btn.getAttribute('aria-expanded') === 'true'; btn.setAttribute('aria-expanded', String(!open)); $('ratePanel').hidden = open; });
+  }).catch(() => {});
   let tipTimer;
   function tip(k) {
     const t = $('tip');

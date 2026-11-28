@@ -1,4 +1,5 @@
 import { sql, ensureTables, json, clean, geo } from '../lib/db.js';
+import { sendWelcome } from '../lib/email.js';
 
 const ANSWERS = ['brand', 'marketer', 'building', 'nosy'];
 
@@ -22,6 +23,8 @@ export async function POST(request) {
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: 'Enter a valid email' }, 400);
     await sql`INSERT INTO kc_popup (vid, email, email_at, source, country, city) VALUES (${vid}, ${email}, now(), ${source}, ${g.country}, ${g.city})
               ON CONFLICT (vid) DO UPDATE SET email = EXCLUDED.email, email_at = now()`;
+    // Welcome email straight away (the 5-minute timer retries if this one fails).
+    try { await sendWelcome(vid); } catch (e) { console.error('welcome send failed', e?.message); }
   } else return json({ error: 'Bad step' }, 400);
   return json({ ok: true });
 }
