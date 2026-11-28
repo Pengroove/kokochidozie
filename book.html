@@ -113,6 +113,8 @@ footer{padding-bottom:90px}
 .rpanel{margin:0 0 16px}
 .rlist{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(240px,300px);gap:12px;overflow-x:auto;padding:4px 6px 10px 2px;scroll-snap-type:x mandatory}
 .rcard{scroll-snap-align:start;background:#FFFFFF;border:2px solid #17183B;border-radius:16px;padding:14px 16px;box-shadow:3px 3px 0 #17183B}
+.radd{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:4px;text-decoration:none;color:#17183B;background:#DDF56B}
+.rplus{width:36px;height:36px;border-radius:50%;border:2px solid #17183B;background:#FFFFFF;display:grid;place-items:center;font-size:22px;font-weight:800;margin-bottom:6px}
 .rcard .rs{color:#FFB800;font-size:16px;letter-spacing:1px}
 .rcard p{margin:4px 0 8px;font-size:15px;color:#17183B}
 .rcard b{font-size:14px}.rcard small{display:block;color:#3A3C66;font-size:13px}
@@ -154,6 +156,7 @@ footer{padding-bottom:90px}
 <label for="notes">Anything else? <span class="opt">(optional)</span></label><input id="notes" name="notes" maxlength="300" placeholder="e.g. Cost per sale doubled last month">
 <button class="pay" type="submit" id="go">Pay ₦100,000 and book</button>
 <p class="small">Secure payment by Bachs: card or bank transfer. You pick your time right after.</p>
+<p class="small" style="margin-top:6px">Had a call with me already? <a href="/review">Leave a review</a></p>
 </form>
 </aside>
 <section class="how">
@@ -212,7 +215,7 @@ footer{padding-bottom:90px}
     if (!d || !d.count) return;
     const e = (t) => String(t || '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     $('rateTxt').textContent = d.average.toFixed(1) + ' from ' + d.count + (d.count === 1 ? ' review' : ' reviews') + ' · tap to read';
-    $('rateList').innerHTML = d.reviews.map((x) => '<article class="rcard"><div class="rs" aria-label="' + x.rating + ' out of 5">' + '★★★★★'.slice(0, x.rating) + '</div><p>' + e(x.body) + '</p><b>' + e(x.name) + '</b><small>' + e([x.brand, x.product === 'chat' ? '15-min chat' : x.product ? '1-hour consultation' : ''].filter(Boolean).join(' · ')) + '</small></article>').join('');
+    $('rateList').innerHTML = d.reviews.map((x) => '<article class="rcard"><div class="rs" aria-label="' + x.rating + ' out of 5">' + '★★★★★'.slice(0, x.rating) + '</div><p>' + e(x.body) + '</p><b>' + e(x.name) + '</b><small>' + e([x.brand, x.product === 'chat' ? '15-min chat' : x.product ? '1-hour consultation' : ''].filter(Boolean).join(' · ')) + '</small></article>').join('') + '<a class="rcard radd" href="/review"><span class="rplus" aria-hidden="true">+</span><b>Had a call with me?</b><small>Leave a review</small></a>';
     const btn = $('rateBtn'); btn.classList.remove('hidden');
     btn.addEventListener('click', () => { const open = btn.getAttribute('aria-expanded') === 'true'; btn.setAttribute('aria-expanded', String(!open)); $('ratePanel').hidden = open; });
   }).catch(() => {});
