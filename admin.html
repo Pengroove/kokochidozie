@@ -77,6 +77,11 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
 .empty{color:#3A3C66;font-size:15px;padding:8px 0;margin:0}
 .livehead{display:grid;grid-template-columns:minmax(0,1.2fr) repeat(4,minmax(0,1fr));gap:12px}
 .lt{background:#FFFFFF;border:2px solid #17183B;border-radius:16px;padding:14px 16px;box-shadow:3px 3px 0 #17183B}
+.abtest{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
+.abt{border:2px solid #17183B;border-radius:14px;padding:10px 12px;background:#FFFFFF}
+.abt b{display:block;font-size:13px}
+.abt span{font-size:22px;font-weight:800}
+.abt small{display:block;font-size:12px;color:#3A3C66}
 .abh{margin:18px 0 8px;font-size:15px}
 .price{display:inline-block;background:#DDF56B;border:1.5px solid #17183B;border-radius:999px;padding:1px 9px;font-size:12px;font-weight:800;margin-left:6px}
 .behhead{grid-template-columns:minmax(0,1.2fr) repeat(4,minmax(0,1fr))}
@@ -212,11 +217,12 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
 <h2 class="serif title">Bookings <span class="it">board</span></h2>
 <p class="lead">Move each booking along with the dropdown. Moving it to "Call done" sends the thank-you email and sets the 30-day check-in.</p>
 <p class="warn hidden" id="emailoff">Automatic emails are off until Resend is connected.</p>
-<div class="panel" style="margin:0 0 18px"><h3 class="serif">Test the <span class="it">emails</span></h3><p class="sub">Sends a sample "payment received" email to the address below.</p>
-<form id="testform" style="display:flex;gap:10px;flex-wrap:wrap"><input id="testto" type="email" required placeholder="you@email.com" style="flex:1;min-width:200px;padding:10px 12px;border:2px solid #17183B;border-radius:10px;font:inherit"><button type="submit" style="padding:10px 18px;border:2px solid #17183B;border-radius:999px;background:#FF8AD0;font:inherit;font-weight:700;cursor:pointer">Send test</button></form>
+<div class="panel" style="margin:0 0 18px"><h3 class="serif">Test the <span class="it">emails</span></h3><p class="sub">Sends one sample of every email (15 in total, numbered in order) to the address below. Takes about 15 seconds.</p>
+<form id="testform" style="display:flex;gap:10px;flex-wrap:wrap"><input id="testto" type="email" required placeholder="you@email.com" style="flex:1;min-width:200px;padding:10px 12px;border:2px solid #17183B;border-radius:10px;font:inherit"><button type="submit" style="padding:10px 18px;border:2px solid #17183B;border-radius:999px;background:#FF8AD0;font:inherit;font-weight:700;cursor:pointer">Send all test emails</button></form>
 <p id="testmsg" class="sub" style="margin-top:8px"></p></div>
 <div class="board" id="board"></div>
-<div class="panel" style="margin-top:18px"><h3 class="serif">Didn't <span class="it">finish</span></h3><p class="sub" id="abSum">People who started booking but didn't pay. Follow-up emails go out by themselves: 20 minutes after an unfinished payment and 15 minutes after an unfinished form, then once more the next day. They stop as soon as someone pays.</p>
+<div class="panel" style="margin-top:18px"><h3 class="serif">Didn't <span class="it">finish</span></h3><p class="sub" id="abSum">People who started booking but didn't pay. Follow-ups go out by themselves: the first after 5 or 15 minutes (a timing test, results below), the second after 12 hours, and a personal note from you after 2 days. They stop as soon as someone pays.</p>
+<div class="abtest" id="abtest"></div>
 <h4 class="abh">Got to payment, didn't pay</h4><div id="unpaid"></div>
 <h4 class="abh">Started the form, didn't submit</h4><div id="abforms"></div></div>
 </div>
@@ -291,7 +297,7 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
     try {
       const r = await fetch('/api/admin-test-email', { method: 'POST', headers: { authorization: 'Bearer ' + pw, 'content-type': 'application/json' }, body: JSON.stringify({ to: $('testto').value }) });
       const d = await r.json().catch(() => ({}));
-      m.textContent = d.ok ? 'Sent. Check the inbox (and spam).' : (d.error || 'Could not send.');
+      m.textContent = d.ok ? 'Sent ' + (d.sent || '') + ' emails. Check the inbox (and spam).' : (d.error || 'Could not send.');
     } catch (err) { m.textContent = 'Could not send.'; }
   });
 
@@ -343,7 +349,7 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
 
   async function update(id, body) { await api('/api/admin-booking', { method: 'POST', body: JSON.stringify({ id, ...body }) }); }
   const STAGES = [['paid', 'Paid · waiting for a time'], ['scheduled', 'Call booked'], ['audit_done', 'Audit done'], ['support', 'Call done · check-in at 30 days'], ['closed', 'Closed']];
-  const ELABEL = { paid: 'Payment email', scheduled: 'Booking + questions', remind_day: 'Day-before reminder', remind_morning: 'Morning reminder', after_call: 'Thank-you', review: 'Review ask', support_ending: '30-day check-in', abandon_1: 'Follow-up 1', abandon_2: 'Follow-up 2', form_1: 'Follow-up 1', form_2: 'Follow-up 2' };
+  const ELABEL = { paid: 'Payment email', scheduled: 'Booking + questions', remind_day: 'Day-before reminder', remind_morning: 'Morning reminder', after_call: 'Thank-you', review: 'Review ask', support_ending: '30-day check-in', abandon_1: 'Follow-up 1', abandon_2: 'Follow-up 2', abandon_3: 'Personal note', form_1: 'Follow-up 1', form_2: 'Follow-up 2', form_3: 'Personal note' };
   function renderBoard(d) {
     $('emailoff').classList.toggle('hidden', !!d.emailsOn);
     const list = d.bookings.filter((b) => b.status === 'paid');
@@ -411,8 +417,14 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
       if (l.phone) { const w = el('a', 'wa', 'WhatsApp'); w.href = waLink(l.phone); w.target = '_blank'; w.rel = 'noopener'; act.append(w); }
       r.append(act); fb.append(r);
     });
+    const ab = d.abTest || { A: { sent: 0, booked: 0 }, B: { sent: 0, booked: 0 } };
+    const abBox = $('abtest'); abBox.replaceChildren();
+    [['A', 'First email after 5 min'], ['B', 'First email after 15 min']].forEach(([k, label]) => {
+      const g = ab[k], t = el('div', 'abt'); t.append(el('b', '', label)); t.append(el('span', '', g.sent ? pct(g.booked, g.sent) : '–'));
+      t.append(el('small', '', g.booked + ' booked out of ' + g.sent + ' emailed')); abBox.append(t);
+    });
     const value = unpaid.reduce((t, b) => t + Number(b.amount || 0), 0) + forms.reduce((t, l) => t + (l.product === 'chat' ? 30000 : 100000), 0);
-    $('abSum').textContent = (unpaid.length + forms.length) + ' people started booking but did not finish paying, worth ' + naira(value) + ' in total. Follow-up emails go out by themselves: 20 minutes after an unfinished payment and 15 minutes after an unfinished form, then once more the next day. They stop as soon as someone pays.';
+    $('abSum').textContent = (unpaid.length + forms.length) + ' people started booking but did not finish paying, worth ' + naira(value) + ' in total. Follow-ups go out by themselves: the first after 5 or 15 minutes (a timing test, results below), the second after 12 hours, and a personal note from you after 2 days. They stop as soon as someone pays.';
   }
 
   function renderLive(d) {

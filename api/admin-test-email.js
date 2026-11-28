@@ -9,6 +9,6 @@ export async function POST(request) {
   try { b = await request.json(); } catch { return json({ error: 'Bad request' }, 400); }
   const to = String(b.to || '').trim();
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(to)) return json({ error: 'Enter a valid email' }, 400);
-  const r = await sendTest(to, 'paid');
+  const r = await sendTest(to, 'all');
   return json(r, r.ok ? 200 : 502);
 }

@@ -2,6 +2,7 @@ import { sql, ensureTables, json } from '../lib/db.js';
 import { allowed } from '../lib/auth.js';
 import { emailsOn } from '../lib/email.js';
 import { syncPayments } from '../lib/pay.js';
+import { abGroup } from '../lib/email.js';
 
 // Numbers for the admin dashboard: visits and bookings by source over the chosen days.
 export async function GET(request) {
@@ -37,6 +38,16 @@ export async function GET(request) {
     WHERE booking_id IS NULL AND updated_at > now() - make_interval(days => ${W})
       AND NOT EXISTS (SELECT 1 FROM kc_bookings b WHERE (lower(b.email) = lower(l.email) OR b.phone = l.phone) AND b.created_at > l.created_at - interval '1 day')
     ORDER BY updated_at DESC LIMIT 100`;
+  // Timing test results: everyone who got a first follow-up, by group, and whether they went on to pay.
+  const followed = await sql`
+    SELECT b.id AS key, b.email, (b.emails->>'abandon_1')::timestamptz AS at FROM kc_bookings b WHERE b.emails ? 'abandon_1'
+    UNION ALL SELECT l.vid, l.email, (l.emails->>'form_1')::timestamptz FROM kc_leads l WHERE l.emails ? 'form_1'`;
+  const paidEmails = await sql`SELECT lower(email) AS email, paid_at FROM kc_bookings WHERE status = 'paid'`;
+  const abTest = { A: { sent: 0, booked: 0 }, B: { sent: 0, booked: 0 } };
+  for (const f of followed) {
+    const g = abTest[abGroup(f.key)]; g.sent++;
+    if (paidEmails.some((p) => p.email === String(f.email || '').toLowerCase() && new Date(p.paid_at) >= new Date(f.at))) g.booked++;
+  }
   const [eng, reach, clicks, devices, returning, pages] = await Promise.all([
     sql`SELECT count(*)::int AS n, COALESCE(percentile_cont(0.5) WITHIN GROUP (ORDER BY secs), 0)::float AS med_secs,
                COALESCE(avg(max_pct), 0)::float AS avg_pct,
@@ -60,5 +71,5 @@ export async function GET(request) {
   return json({ days, totals: visits[0], bySource, booked, daily, bookings: recent, places,
     funnel: { consult: f.consult || 0, form: f.form || 0, checkout: f.checkout || 0 }, emailsOn: emailsOn(),
     popup: { ...popStats[0], answers: popAnswers, emails: popEmails }, sync,
-    abandonedForms, engage: { ...eng[0], reach, clicks, devices, returning: returning[0], pages } });
+    abandonedForms, abTest, engage: { ...eng[0], reach, clicks, devices, returning: returning[0], pages } });
 }
