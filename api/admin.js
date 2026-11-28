@@ -49,6 +49,11 @@ export async function GET(request) {
     if (paidEmails.some((p) => p.email === String(f.email || '').toLowerCase() && new Date(p.paid_at) >= new Date(f.at))) g.booked++;
   }
   const reviews = await sql`SELECT id, created_at, name, brand, rating, body, product, status, booking_id FROM kc_reviews ORDER BY created_at DESC LIMIT 100`;
+  // Email performance: one row per email group (welcome, abandon, form, booking emails).
+  const emailStats = await sql`SELECT grp, kind, count(*)::int AS sent, count(delivered_at)::int AS delivered, count(opened_at)::int AS opened,
+      count(clicked_at)::int AS clicked, count(bounced_at)::int AS bounced
+    FROM kc_email_log WHERE sent_at > now() - make_interval(days => ${days}) GROUP BY grp, kind ORDER BY grp, kind`;
+  const welcomeOpens = await sql`SELECT ref, max(opened_at) AS opened_at, max(clicked_at) AS clicked_at FROM kc_email_log WHERE grp = 'welcome' GROUP BY ref`;
   const [eng, reach, clicks, devices, returning, pages] = await Promise.all([
     sql`SELECT count(*)::int AS n, COALESCE(percentile_cont(0.5) WITHIN GROUP (ORDER BY secs), 0)::float AS med_secs,
                COALESCE(avg(max_pct), 0)::float AS avg_pct,
@@ -72,5 +77,5 @@ export async function GET(request) {
   return json({ days, totals: visits[0], bySource, booked, daily, bookings: recent, places,
     funnel: { consult: f.consult || 0, form: f.form || 0, checkout: f.checkout || 0 }, emailsOn: emailsOn(),
     popup: { ...popStats[0], answers: popAnswers, emails: popEmails }, sync,
-    abandonedForms, abTest, reviews, engage: { ...eng[0], reach, clicks, devices, returning: returning[0], pages } });
+    abandonedForms, abTest, reviews, emailStats, welcomeOpens, emailTracking: Boolean(process.env.RESEND_WEBHOOK_SECRET), engage: { ...eng[0], reach, clicks, devices, returning: returning[0], pages } });
 }

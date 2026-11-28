@@ -77,6 +77,9 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
 .empty{color:#3A3C66;font-size:15px;padding:8px 0;margin:0}
 .livehead{display:grid;grid-template-columns:minmax(0,1.2fr) repeat(4,minmax(0,1fr));gap:12px}
 .lt{background:#FFFFFF;border:2px solid #17183B;border-radius:16px;padding:14px 16px;box-shadow:3px 3px 0 #17183B}
+.emrow{display:grid;grid-template-columns:minmax(0,1fr) repeat(3,minmax(54px,auto));gap:10px;align-items:center;padding:10px 0;border-bottom:1.5px solid #E4E5EE;font-size:14px}
+.emrow.h{font-weight:800;font-size:12px;color:#3A3C66;padding-top:0}
+.emrow b{font-size:15px}.emrow .n{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
 .subhead{grid-template-columns:repeat(4,minmax(0,1fr))}
 .st{display:inline-block;border:1.5px solid #17183B;border-radius:999px;padding:1px 9px;font-size:12px;font-weight:800;margin-left:6px}
 .st.ok{background:#DDF56B}.st.no{background:#FFFFFF}.st.off{background:#E4E5EE;color:#5A5C80}
@@ -125,6 +128,45 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
 .tip code{background:#FFFFFF;border:1.5px solid #17183B;border-radius:6px;padding:1px 6px;overflow-wrap:anywhere}
 @media (max-width:980px){.funnel{grid-template-columns:repeat(2,minmax(0,1fr))}.step{border-bottom:2px solid #17183B}.step:nth-child(2n){border-right:0}.step.money{grid-column:1/-1;border-bottom:0}.grid2{grid-template-columns:minmax(0,1fr)}.livehead{grid-template-columns:repeat(2,minmax(0,1fr))}.lt.big{grid-column:1/-1}}
 @media (max-width:600px){.brow{grid-template-columns:minmax(0,1fr) auto}.brow .track{grid-column:1/-1;grid-row:2}.lrow{grid-template-columns:minmax(0,1fr) auto}.lrow .hide-s{grid-column:1/-1}.urow{grid-template-columns:minmax(0,1fr) auto}.urow .uc{grid-column:1/-1}}
+
+/* Home: glanceable summary */
+.hello{font-size:clamp(30px,5vw,44px);margin:6px 0 2px;line-height:1.05}
+.hsub{color:#3A3C66;margin:0 0 16px;font-size:15px}
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:22px}
+.tile{display:block;text-align:left;background:#FFFFFF;border:2px solid #17183B;border-radius:18px;padding:14px 16px;box-shadow:3px 3px 0 #17183B;color:#17183B;cursor:pointer;font:inherit;text-decoration:none}
+.tile:active{transform:translate(2px,2px);box-shadow:1px 1px 0 #17183B}
+.tile .k{font-size:13px;font-weight:700;color:#3A3C66}
+.tile .v{font-size:clamp(26px,6vw,40px);font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.tile .s{font-size:13px;color:#3A3C66}
+.tile.lime{background:#DDF56B}.tile.pink{background:#FF8AD0}.tile.blue{background:#BFE1FF}
+.needs h3{font-size:24px;margin:0 0 10px}
+.todo{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#FFFFFF;border:2px solid #17183B;border-radius:16px;padding:12px 14px;margin:0 0 10px;font:inherit;color:#17183B;cursor:pointer}
+.todo .ic{flex:none;width:38px;height:38px;border-radius:12px;border:2px solid #17183B;display:grid;place-items:center;font-weight:800}
+.todo .tx{flex:1}.todo .tx b{display:block;font-size:16px}.todo .tx span{font-size:13px;color:#3A3C66}
+.todo .go{font-size:20px;font-weight:800}
+.done{background:#DDF56B;border:2px solid #17183B;border-radius:16px;padding:14px;font-weight:700}
+.sw{display:inline-flex;border:2px solid #17183B;border-radius:999px;overflow:hidden;background:#FFFFFF;margin:0 0 14px}
+.sw button{border:0;background:none;padding:7px 14px;font-weight:700;cursor:pointer;color:#17183B}
+.sw button[aria-pressed="true"]{background:#17183B;color:#FFFFFF}
+.bnav{display:none}
+.bi{display:none}
+@media (max-width:760px){
+.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+header .tabs{display:none}
+.bt{display:none}.bi{display:block}
+#refresh,#out{width:40px;padding:0;min-height:38px}
+.bar{flex-wrap:nowrap}.right{gap:6px;flex-wrap:nowrap}
+.seg button{padding-left:9px;padding-right:9px}
+.bar{padding-top:8px;padding-bottom:8px}
+.brand b{font-size:26px}
+.bnav{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:20;background:#FFFFFF;border-top:2px solid #17183B;padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+.bnav button{border:0;background:none;font:inherit;font-size:11px;font-weight:700;color:#3A3C66;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0;cursor:pointer;position:relative}
+.bnav .i{display:block}
+.bnav button[aria-selected="true"] .i{stroke-width:2.4}
+.bnav button[aria-selected="true"]{color:#2E45F5}
+.bnav .badge{position:absolute;top:0;left:calc(50% + 6px);background:#FF8AD0;border:1.5px solid #17183B;border-radius:999px;font-size:10px;padding:0 5px;color:#17183B;min-width:18px}
+main.wrap{padding-bottom:90px}
+}
 @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
 </style>
 </head>
@@ -144,7 +186,8 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
 <header><div class="wrap bar">
 <div class="brand"><b>koko.</b><span>admin</span></div>
 <div class="tabs" role="tablist">
-<button class="tab" role="tab" data-tab="overview" aria-selected="true">Overview</button>
+<button class="tab" role="tab" data-tab="home" aria-selected="true">Home</button>
+<button class="tab" role="tab" data-tab="overview" aria-selected="false">Overview</button>
 <button class="tab" role="tab" data-tab="behaviour" aria-selected="false">Behaviour</button>
 <button class="tab" role="tab" data-tab="subscribers" aria-selected="false">Subscribers</button>
 <button class="tab" role="tab" data-tab="live" aria-selected="false"><span class="livedot" aria-hidden="true"></span>Live <span class="count" id="livecount">0</span></button>
@@ -152,17 +195,33 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
 </div>
 <div class="right">
 <div class="seg" id="range" role="group" aria-label="Date range">
+<button type="button" data-d="1" aria-pressed="false">24h</button>
 <button type="button" data-d="7" aria-pressed="false">7d</button>
 <button type="button" data-d="30" aria-pressed="true">30d</button>
 <button type="button" data-d="90" aria-pressed="false">90d</button>
 </div>
-<button class="btn plain small" type="button" id="refresh">Refresh</button>
-<button class="btn plain small" type="button" id="out">Log out</button>
+<button class="btn plain small" type="button" id="refresh" aria-label="Refresh"><span class="bt">Refresh</span><svg class="bi" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button>
+<button class="btn plain small" type="button" id="out" aria-label="Log out"><span class="bt">Log out</span><svg class="bi" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4h4v16h-4"/><path d="M10 8l-4 4 4 4"/><path d="M6 12h10"/></svg></button>
 </div>
 </div></header>
 
 <main class="wrap">
-<div id="tab-overview">
+<div id="tab-home">
+<h2 class="serif hello" id="hello">Hi, <span class="it">Koko</span></h2>
+<p class="hsub" id="hsub">Here's how things look.</p>
+<div class="tiles">
+<button class="tile lime" data-go="bookings"><div class="k">Money in</div><div class="v" id="h_rev">–</div><div class="s" id="h_rev_s"></div></button>
+<button class="tile" data-go="live"><div class="k">On the site now</div><div class="v" id="h_live">–</div><div class="s" id="h_live_s">people</div></button>
+<button class="tile" data-go="overview"><div class="k">Visitors</div><div class="v" id="h_vis">–</div><div class="s" id="h_vis_s"></div></button>
+<button class="tile pink" data-go="bookings"><div class="k">Didn't finish</div><div class="v" id="h_ab">–</div><div class="s" id="h_ab_s"></div></button>
+<button class="tile" data-go="subscribers"><div class="k">Subscribers</div><div class="v" id="h_sub">–</div><div class="s" id="h_sub_s"></div></button>
+<button class="tile blue" data-go="overview"><div class="k">Visitors who booked</div><div class="v" id="h_conv">–</div><div class="s">of all visitors</div></button>
+</div>
+<div class="needs"><h3 class="serif">Needs <span class="it">you</span></h3><div id="todo"></div></div>
+</div>
+
+<div id="tab-overview" class="hidden">
+<div class="sw" role="group"><button type="button" data-sw="overview" aria-pressed="true">Traffic</button><button type="button" data-sw="behaviour" aria-pressed="false">Behaviour</button></div>
 <h2 class="serif title">How the site is <span class="it">doing</span></h2>
 <p class="lead" id="rangeText">Last 30 days</p>
 <div class="funnel">
@@ -182,6 +241,7 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
 </div>
 
 <div id="tab-behaviour" class="hidden">
+<div class="sw" role="group"><button type="button" data-sw="overview" aria-pressed="false">Traffic</button><button type="button" data-sw="behaviour" aria-pressed="true">Behaviour</button></div>
 <h2 class="serif title">How people <span class="it">use it</span></h2>
 <p class="lead" id="behText">Homepage, last 30 days</p>
 <div class="livehead behhead">
@@ -215,6 +275,7 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
 <div class="lt"><div class="k">Not sent yet</div><div class="v" id="s2">–</div></div>
 <div class="lt"><div class="k">Unsubscribed</div><div class="v" id="s3">–</div></div>
 </div>
+<div class="panel" style="margin-bottom:18px"><h3 class="serif">How your emails <span class="it">do</span></h3><p class="sub" id="emNote">Sent, opened and clicked, for the period picked at the top.</p><div id="emstats"></div></div>
 <div class="panel">
 <p style="margin:0 0 6px"><button type="button" id="wAll" class="wa" style="cursor:pointer;background:#FF8AD0">Send welcome to everyone not sent yet</button> <span id="wMsg" class="more"></span></p>
 <div id="sublist"></div>
@@ -252,6 +313,14 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
 <h4 class="abh">Started the form, didn't submit</h4><div id="abforms"></div></div>
 </div>
 </main>
+<nav class="bnav" aria-label="Sections">
+<button data-tab="home" aria-selected="true"><svg class="i" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h14V9.5"/><path d="M10 20v-6h4v6"/></svg>Home</button>
+<button data-tab="bookings" aria-selected="false"><svg class="i" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><path d="m9 14.5 2 2 4-4"/></svg>Bookings<span class="badge hidden" id="nb_book"></span></button>
+<button data-tab="subscribers" aria-selected="false"><svg class="i" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.3-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><path d="M16 4.8a3.5 3.5 0 0 1 0 6.4M18.5 14.8c1.7.8 2.8 2.5 3 5.2"/></svg>People</button>
+<button data-tab="overview" aria-selected="false"><svg class="i" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Stats</button>
+<button data-tab="live" aria-selected="false"><svg class="i" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="2.5" fill="currentColor"/><path d="M7.8 7.8a6 6 0 0 0 0 8.4M16.2 7.8a6 6 0 0 1 0 8.4M4.9 4.9a10 10 0 0 0 0 14.2M19.1 4.9a10 10 0 0 1 0 14.2"/></svg>Live<span class="badge hidden" id="nb_live"></span></button>
+</nav>
+
 </section>
 
 <script>
@@ -296,7 +365,7 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
     const bookedBy = {}; let nBook = 0, rev = 0;
     d.booked.forEach((b) => { bookedBy[b.source] = b; nBook += b.bookings; rev += b.revenue; });
     const v = d.totals.visitors, f = d.funnel;
-    $('rangeText').textContent = 'Last ' + d.days + ' days';
+    $('rangeText').textContent = periodName(d.days);
     $('f0').textContent = v.toLocaleString(); $('f1').textContent = f.consult; $('f2').textContent = f.form; $('f3').textContent = f.checkout; $('f4').textContent = nBook;
     $('p1').textContent = pct(f.consult, v) + ' of visitors'; $('p2').textContent = pct(f.form, f.consult) + ' of those'; $('p3').textContent = pct(f.checkout, f.form) + ' of those'; $('p4').textContent = pct(nBook, f.checkout) + ' of those';
     $('rev').textContent = naira(rev) + ' revenue';
@@ -342,7 +411,26 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
       box.append(r);
     });
   }
+  const EMAIL_NAME = { welcome_brand: 'Welcome · runs a brand', welcome_marketer: 'Welcome · does marketing', welcome_building: 'Welcome · building something', welcome_nosy: 'Welcome · just being nosy',
+    form_1: 'Left the form · 1st', form_2: 'Left the form · 12 hours', form_3: 'Left the form · 2 days', abandon_1: 'Left at payment · 1st', abandon_2: 'Left at payment · 12 hours', abandon_3: 'Left at payment · 2 days',
+    paid: 'Payment received', scheduled: 'Time picked', remind_day: 'Day-before reminder', remind_morning: 'Morning reminder', after_call: 'After the call', review: 'Review request', support_ending: '30-day check-in' };
+  function renderEmailStats(d) {
+    const box = $('emstats'); box.replaceChildren();
+    $('emNote').textContent = d.emailTracking ? 'Sent, opened and clicked, for the period picked at the top. Opens are a rough guide: some phones (like iPhone Mail) count an open even if it was not read.'
+      : 'Opens and clicks start showing once Resend is connected (see the steps Claude sent you). Until then you will only see what was sent.';
+    const rows = d.emailStats || [];
+    if (!rows.length) { box.append(el('p', 'empty', 'No emails sent in this period.')); return; }
+    const h = el('div', 'emrow h'); ['Email', 'Sent', 'Opened', 'Clicked'].forEach((t, i) => { const c = el('div', i ? 'n' : '', t); h.append(c); }); box.append(h);
+    rows.forEach((r) => {
+      const row = el('div', 'emrow'); row.append(el('b', '', EMAIL_NAME[r.kind] || r.kind));
+      row.append(el('div', 'n', String(r.sent)));
+      row.append(el('div', 'n', d.emailTracking ? pct(r.opened, r.sent) : '–'));
+      row.append(el('div', 'n', d.emailTracking ? pct(r.clicked, r.sent) : '–'));
+      box.append(row);
+    });
+  }
   function renderSubs(d) {
+    const opened = Object.fromEntries((d.welcomeOpens || []).map((w) => [w.ref, w]));
     const list = (d.popup && d.popup.emails) || [];
     const sent = list.filter((e) => e.welcome_at && !e.unsubscribed_at).length, off = list.filter((e) => e.unsubscribed_at).length;
     $('s0').textContent = list.length; $('s1').textContent = sent; $('s2').textContent = list.length - sent - off; $('s3').textContent = off;
@@ -352,6 +440,7 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
       const r = el('div', 'urow');
       const a = el('div'); const nm = el('div', 'nm', e.email);
       nm.append(e.unsubscribed_at ? el('span', 'st off', 'Unsubscribed') : e.welcome_at ? el('span', 'st ok', 'Welcome sent ' + fmt(e.welcome_at)) : el('span', 'st no', 'Not sent'));
+      const o = opened[e.vid]; if (o && o.opened_at) nm.append(el('span', 'st ok', o.clicked_at ? 'Opened · clicked' : 'Opened'));
       a.append(nm);
       a.append(el('div', 'more', (ANS[e.answer] || 'No answer picked') + ' · signed up ' + fmt(e.email_at) + (e.source ? ' · via ' + e.source : '') + (e.city ? ' · ' + e.city : '')));
       r.append(a); r.append(el('div'));
@@ -387,7 +476,7 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
   const dur = (s) => { s = Math.round(s || 0); return s < 60 ? s + 's' : Math.floor(s / 60) + 'm ' + String(s % 60).padStart(2, '0') + 's'; };
   function renderBehaviour(d) {
     const e = d.engage; if (!e) return;
-    $('behText').textContent = 'Homepage, last ' + d.days + ' days · ' + e.n + ' visitors measured';
+    $('behText').textContent = periodName(d.days) + ' on the homepage · ' + e.n + ' visitors measured';
     $('b0').textContent = e.n ? dur(e.med_secs) : '–';
     $('b1').textContent = e.n ? Math.round(e.avg_pct) + '%' : '–';
     
@@ -534,6 +623,8 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
     L.forEach((x) => { c[x.stage] = (c[x.stage] || 0) + 1; });
     $('l0').textContent = L.length; $('l1').textContent = c.browsing; $('l2').textContent = c.consultation; $('l3').textContent = c.filling; $('l4').textContent = c.payment;
     $('livecount').textContent = L.length;
+    $('h_live').textContent = L.length; $('h_live_s').textContent = (c.filling + c.payment) ? (c.filling + c.payment) + ' filling in or paying right now' : (L.length === 1 ? 'person' : 'people');
+    const nl = $('nb_live'); nl.textContent = L.length; nl.classList.toggle('hidden', !L.length);
     $('today').textContent = d.todayVisitors + ' visitors so far today.';
     const box = $('livelist'); box.replaceChildren();
     if (!L.length) { box.append(el('p', 'empty', 'Nobody on the site right now.')); return; }
@@ -547,8 +638,50 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
     });
   }
 
+  const periodName = (n) => n === 1 ? 'Last 24 hours' : 'Last ' + n + ' days';
+  let lastLive = 0;
+  function renderHome(d) {
+    const h = new Date().getHours();
+    $('hello').innerHTML = (h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening') + ', <span class="it">Koko</span>';
+    $('hsub').textContent = periodName(d.days) + ' at a glance. Tap anything to open it.';
+    let rev = 0, nPaid = 0; d.booked.forEach((b) => { rev += b.revenue; nPaid += b.bookings; });
+    $('h_rev').textContent = naira(rev); $('h_rev_s').textContent = nPaid + (nPaid === 1 ? ' paid booking' : ' paid bookings');
+    $('h_vis').textContent = d.totals.visitors.toLocaleString(); $('h_vis_s').textContent = d.totals.visits.toLocaleString() + ' page views';
+    $('h_conv').textContent = d.totals.visitors ? (nPaid / d.totals.visitors * 100).toFixed(1) + '%' : '–';
+    const unpaid = d.bookings.filter((b) => b.status !== 'paid'), forms = d.abandonedForms || [];
+    const abVal = unpaid.reduce((t, b) => t + Number(b.amount || 0), 0) + forms.reduce((t, l) => t + (l.product === 'chat' ? 30000 : 100000), 0);
+    $('h_ab').textContent = naira(abVal); $('h_ab_s').textContent = (unpaid.length + forms.length) + ' people';
+    const subs = (d.popup && d.popup.emails) || [], since = Date.now() - d.days * 864e5;
+    const newSubs = subs.filter((e) => new Date(e.email_at).getTime() > since).length;
+    $('h_sub').textContent = subs.length; $('h_sub_s').textContent = '+' + newSubs + ' in this period';
+    // Things that need Koko, most urgent first.
+    const T = [];
+    const paid = d.bookings.filter((b) => b.status === 'paid');
+    const waiting = paid.filter((b) => (b.stage || 'paid') === 'paid');
+    const upcoming = paid.filter((b) => b.call_at && new Date(b.call_at) > new Date() && ['scheduled', 'audit_done'].includes(b.stage)).sort((a, b) => new Date(a.call_at) - new Date(b.call_at));
+    if (upcoming.length) T.push(['☎', '#DDF56B', upcoming.length + (upcoming.length === 1 ? ' call coming up' : ' calls coming up'), 'Next: ' + (upcoming[0].name || '') + ', ' + fmt(upcoming[0].call_at), 'bookings']);
+    if (waiting.length) T.push(['₦', '#FF8AD0', waiting.length + ' paid, waiting to pick a time', 'Nudge them on WhatsApp if it has been a while', 'bookings']);
+    const toPrep = paid.filter((b) => b.stage === 'scheduled' && b.product !== 'chat');
+    if (toPrep.length) T.push(['✎', '#BFE1FF', toPrep.length + ' consultation' + (toPrep.length === 1 ? '' : 's') + ' to prepare for', 'Go through their ads, site and numbers before the call', 'bookings']);
+    const pendRev = (d.reviews || []).filter((r) => r.status === 'pending');
+    if (pendRev.length) T.push(['★', '#DDF56B', pendRev.length + (pendRev.length === 1 ? ' review' : ' reviews') + ' waiting for you', 'Approve to show on your booking page', 'bookings']);
+    const notFollowed = unpaid.filter((b) => !(b.emails || {}).abandon_1).length + forms.filter((l) => l.email && !(l.emails || {}).form_1).length;
+    if (unpaid.length + forms.length) T.push(['↺', '#FF8AD0', (unpaid.length + forms.length) + " didn't finish booking · " + naira(abVal), notFollowed ? notFollowed + ' have not had a follow-up yet' : 'Follow-ups are going out', 'bookings']);
+    const noWelcome = subs.filter((e) => !e.welcome_at && !e.unsubscribed_at).length;
+    if (noWelcome) T.push(['✉', '#BFE1FF', noWelcome + (noWelcome === 1 ? ' subscriber has' : ' subscribers have') + ' not had a welcome email', 'Send it from People', 'subscribers']);
+    const box = $('todo'); box.replaceChildren();
+    if (!T.length) { box.append(el('div', 'done', "All caught up. Nothing needs you right now.")); }
+    T.forEach(([ic, bg, title, sub, go]) => {
+      const b = el('button', 'todo'); b.type = 'button';
+      const i = el('span', 'ic', ic); i.style.background = bg; b.append(i);
+      const tx = el('span', 'tx'); tx.append(el('b', '', title)); tx.append(el('span', '', sub)); b.append(tx);
+      b.append(el('span', 'go', '›')); b.onclick = () => show(go); box.append(b);
+    });
+    const nb = $('nb_book'); const nAct = waiting.length + pendRev.length; nb.textContent = nAct; nb.classList.toggle('hidden', !nAct);
+  }
+
   async function loadMain() {
-    try { const d = await api('/api/admin?days=' + days); renderOverview(d); renderPopup(d); renderBehaviour(d); renderBoard(d); renderReviews(d); renderSubs(d); }
+    try { const d = await api('/api/admin?days=' + days); renderOverview(d); renderPopup(d); renderBehaviour(d); renderBoard(d); renderReviews(d); renderSubs(d); renderEmailStats(d); renderHome(d); }
     catch (e) { if (e.message === 'Wrong password') logout('Wrong password.'); }
   }
   async function loadLive() {
@@ -557,9 +690,12 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
   }
   function startLive() { clearInterval(liveTimer); loadLive(); liveTimer = setInterval(() => { if (document.visibilityState === 'visible') loadLive(); }, 10000); }
   function show(t) {
+    const navKey = t === 'behaviour' ? 'overview' : t;
     document.querySelectorAll('.tab').forEach((b) => b.setAttribute('aria-selected', b.dataset.tab === t ? 'true' : 'false'));
-    ['overview', 'behaviour', 'subscribers', 'live', 'bookings'].forEach((k) => $('tab-' + k).classList.toggle('hidden', k !== t));
-    $('range').classList.toggle('hidden', t !== 'overview' && t !== 'behaviour');
+    document.querySelectorAll('.bnav button').forEach((b) => b.setAttribute('aria-selected', b.dataset.tab === navKey ? 'true' : 'false'));
+    ['home', 'overview', 'behaviour', 'subscribers', 'live', 'bookings'].forEach((k) => $('tab-' + k).classList.toggle('hidden', k !== t));
+    $('range').classList.toggle('hidden', !['home', 'overview', 'behaviour', 'subscribers'].includes(t));
+    window.scrollTo(0, 0);
     try { history.replaceState(null, '', '#' + t); } catch (e) {}
   }
   function logout(msg) {
@@ -568,7 +704,7 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
   }
   function enter() {
     $('login').classList.add('hidden'); $('dash').classList.remove('hidden');
-    const h = (location.hash || '').slice(1); show(['behaviour', 'subscribers', 'live', 'bookings'].includes(h) ? h : 'overview');
+    const h = (location.hash || '').slice(1); show(['overview', 'behaviour', 'subscribers', 'live', 'bookings'].includes(h) ? h : 'home');
     loadMain(); startLive();
   }
 
@@ -577,7 +713,9 @@ h2.title{font-size:clamp(30px,3.4vw,40px);line-height:1.05;margin:0 0 4px}
     try { await api('/api/admin-live'); try { sessionStorage.setItem(KEY, pw); } catch (x) {} enter(); }
     catch (x) { $('lerr').textContent = x.message === 'Wrong password' ? 'Wrong password.' : x.message; }
   });
-  document.querySelectorAll('.tab').forEach((b) => b.addEventListener('click', () => show(b.dataset.tab)));
+  document.querySelectorAll('.tab, .bnav button').forEach((b) => b.addEventListener('click', () => show(b.dataset.tab)));
+  document.querySelectorAll('[data-sw]').forEach((b) => b.addEventListener('click', () => show(b.dataset.sw)));
+  document.querySelectorAll('[data-go]').forEach((b) => b.addEventListener('click', () => show(b.dataset.go)));
   $('range').addEventListener('click', (e) => {
     const b = e.target.closest('button'); if (!b) return;
     days = +b.dataset.d; [...$('range').children].forEach((x) => x.setAttribute('aria-pressed', x === b ? 'true' : 'false')); loadMain();
